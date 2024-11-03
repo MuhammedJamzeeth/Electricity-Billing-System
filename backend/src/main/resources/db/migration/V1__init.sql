@@ -14,3 +14,17 @@ CREATE TABLE IF NOT EXISTS users (
 
 CREATE INDEX idx_admin_username ON admin(username);
 CREATE INDEX idx_users_name ON users(name);
+
+CREATE TABLE IF NOT EXISTS consumer (
+    account_no BIGINT AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    email VARCHAR(50) UNIQUE NOT NULL,
+    meter_no BIGINT UNIQUE NOT NULL,
+    join_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    address VARCHAR(255) NOT NULL,
+    phase VARCHAR(15) NOT NULL,
+    contact_number VARCHAR(15) NOT NULL
+    );
+
+
