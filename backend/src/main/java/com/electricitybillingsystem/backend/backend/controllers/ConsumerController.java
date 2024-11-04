@@ -2,16 +2,18 @@ package com.electricitybillingsystem.backend.backend.controllers;
 
 import com.electricitybillingsystem.backend.backend.models.Consumer;
 import com.electricitybillingsystem.backend.backend.services.ConsumerService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ConsumerController {
-    @Autowired
-    private ConsumerService consumerService;
+
+    private final ConsumerService consumerService;
 
     @GetMapping("/consumers")
     public List<Consumer> getAllConsumers() {

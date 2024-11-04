@@ -108,7 +108,7 @@
 				<configuration>
 					<url>jdbc:mysql://localhost:3306/electricity-billing-system</url>
 					<user>root</user>
-					<password>jamzee</password>
+					<password>12345</password>
 				</configuration>
 			</plugin>
 		</plugins>

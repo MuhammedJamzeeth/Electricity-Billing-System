@@ -2,6 +2,8 @@ package com.electricitybillingsystem.backend.backend.services;
 
 import com.electricitybillingsystem.backend.backend.models.Consumer;
 import com.electricitybillingsystem.backend.backend.repositories.ConsumerRepository;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,10 +11,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class ConsumerServiceImpl implements ConsumerService {
 
-    @Autowired
-    private ConsumerRepository consumerRepository;
+
+    private final ConsumerRepository consumerRepository;
     @Override
     public List<Consumer> getAllConsumers() {
         return consumerRepository.findAll();
@@ -23,6 +26,7 @@ public class ConsumerServiceImpl implements ConsumerService {
     }
 
     @Override
+    @Transactional
     public Consumer updateConsumer(Long accountNo, Consumer consumerDetails) {
         Optional<Consumer> optionalConsumer = consumerRepository.findById(accountNo);
         if (optionalConsumer.isPresent()) {
