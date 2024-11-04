@@ -20,7 +20,7 @@ const SignIn = () => {
                 </div>
                 <div className="w-full mt-2 h-px bg-[#E0E5F2]"></div>
                 <form className="flex flex-col mt-6 gap-6">
-                    <Box className="w-full min-h-[50px] pr-4" sx={{
+                    <Box className="w-full min-h-[50px] pr-24" sx={{
                         minHeight: "50px",
                     }}>
                         <FormControl fullWidth>
@@ -55,8 +55,8 @@ const SignIn = () => {
                         <div className="self-start">
                             <Checkbox {...label} defaultChecked/>
                         </div>
-                        <div className="text-[16px] font-[400px] text-[#A3AED0]">
-                            Enter your email and password to log in!
+                        <div className="text-[16px] font-[400px] text-neutral-600">
+                            Keep logged in.
                         </div>
                     </div>
                 </form>
