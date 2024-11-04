@@ -1,3 +1,11 @@
+CREATE USER IF NOT EXISTS 'group07'@'localhost' IDENTIFIED BY '1234';
+
+GRANT ALL PRIVILEGES ON *.* TO 'group07'@'localhost' WITH GRANT OPTION;
+
+FLUSH PRIVILEGES;
+
+CREATE DATABASE IF NOT EXISTS `electricity-billing-system`;
+
 CREATE TABLE IF NOT EXISTS admin (
                        id BIGINT AUTO_INCREMENT PRIMARY KEY,
                        username VARCHAR(50) UNIQUE NOT NULL,
@@ -14,3 +22,6 @@ CREATE TABLE IF NOT EXISTS users (
 
 CREATE INDEX idx_admin_username ON admin(username);
 CREATE INDEX idx_users_name ON users(name);
+
+
+

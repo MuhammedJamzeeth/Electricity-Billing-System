@@ -3,8 +3,40 @@
 ## Prerequisites
 
 - Java Development Kit (JDK) installed (version 8 or higher)
-- MySQL (or another supported database) set up for the project
+- MySQL must be installed and running on your machine.
+- You need access to a MySQL user account with privileges to create other users and grant permissions (such as the `root` user).
 - [Apache Maven](https://maven.apache.org/) installed
+
+
+## Database Setup
+
+This guide provides instructions for setting up MySQL database access by creating a dedicated user with the necessary privileges for the application. Follow these steps to ensure the application can connect to the database correctly.
+
+### Steps to Create a Database and User
+
+#### 1. Log into MySQL as an Admin User
+
+```bash
+mysql -u root -p
+```
+
+#### 3. Create a New User
+```sql
+CREATE USER IF NOT EXISTS 'group07'@'localhost' IDENTIFIED BY 'your_password';
+```
+
+#### 4. Grant Privileges to the New User
+```sql
+GRANT ALL PRIVILEGES ON *.* TO 'group07'@'localhost' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
+```
+
+#### 5. Create a New Database
+```sql
+CREATE DATABASE IF NOT EXISTS electricity-billing-system;
+```
+
+Open your terminal and log into MySQL using a privileged user, such as `root`:
 
 ## Configure Application Properties
 

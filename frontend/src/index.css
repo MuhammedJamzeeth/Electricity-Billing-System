@@ -3,5 +3,16 @@
 @tailwind utilities;
 
 :root {
+ --max-w: 1728px;
+}
 
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    max-width: var(--max-w);
+    margin: 0 auto;
 }
