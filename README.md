@@ -88,3 +88,8 @@ If you encounter database migration issues, such as partially applied migrations
 - **Clean Database** (only for development/testing):
   ```bash
   mvn flyway:clean
+   ```
+### Sign In
+
+![sign-in](images/sign.png)
+
