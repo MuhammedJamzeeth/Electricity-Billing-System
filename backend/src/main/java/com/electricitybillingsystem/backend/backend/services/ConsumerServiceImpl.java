@@ -5,6 +5,7 @@ import com.electricitybillingsystem.backend.backend.repositories.ConsumerReposit
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public class ConsumerServiceImpl implements ConsumerService {
     private final ConsumerRepository consumerRepository;
     @Override
     public List<Consumer> getAllConsumers() {
-        return consumerRepository.findAll();
+        return consumerRepository.findAll(Sort.by("id"));
     }
     @Override
     public Consumer createConsumer(Consumer consumer) {

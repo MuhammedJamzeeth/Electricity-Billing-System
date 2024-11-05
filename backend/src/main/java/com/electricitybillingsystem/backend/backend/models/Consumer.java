@@ -13,8 +13,9 @@ import java.sql.Timestamp;
 @Setter
 public class Consumer {
 
+    private  Integer id;
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long accountNo;
 
     @Column(nullable = false, length = 50)

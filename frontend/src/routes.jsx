@@ -5,6 +5,7 @@ import SignIn from "./pages/Auth/SignIn.jsx";
 import SignUp from "./pages/Auth/SignUp.jsx";
 import HomeLayout from "./pages/Home/HomeLayout.jsx";
 import Dashboard from "./pages/Home/Dashboard.jsx";
+import User from "./pages/Home/User.jsx";
 
 const router = createBrowserRouter([
     {
@@ -15,6 +16,10 @@ const router = createBrowserRouter([
                 path: "",
                 element: <Dashboard/>
             },
+            {
+                path: "users",
+                element: <User/>
+            }
         ]
     },
     {
