@@ -37,6 +37,14 @@ const SideBar = () => {
                 </Link>
                 
                 <div className="flex items-center pl-4">
+                    <Link to={'/employee'} className="flex items-center pl-4">
+                    <PersonIcon className="text-[#A3AED0]"/>
+                    <div className="font-poppin pl-4 text-[#A3AED0] text-[14px] [line-height:30px] [letter-spacing:-0.32px]">
+                        Employee
+                    </div>
+                    </Link>
+                </div>
+                <div className="flex items-center pl-4">
                     <StickyNote2Icon className="text-[#A3AED0]"/>
                     <div className="font-poppin pl-4 text-[#A3AED0] text-[14px] [line-height:30px] [letter-spacing:-0.32px]">
                         Setting
