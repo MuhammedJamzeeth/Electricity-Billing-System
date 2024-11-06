@@ -4,9 +4,7 @@ import SignIn from "./pages/Auth/SignIn.jsx";
 import SignUp from "./pages/Auth/SignUp.jsx";
 import HomeLayout from "./pages/Home/HomeLayout.jsx";
 import Dashboard from "./pages/Home/Dashboard.jsx";
-
 import User from "./pages/Home/User.jsx";
-
 import Payment from "./pages/Payment/Payment.jsx";
 import Branches from "./pages/Home/Branches.jsx";
 
