@@ -8,8 +8,6 @@ import Dashboard from "./pages/Home/Dashboard.jsx";
 import User from "./pages/Home/User.jsx";
 import Payment from "./pages/Payment/Payment.jsx";
 // import UserTable from "./features/user/components/UserTable.jsx";
-// import User from "./pages/Home/User.jsx";
-// import Payment from "./pages/Payment/Payment.jsx";
 import Employee from "./pages/Employee/Employee.jsx";
 
 const router = createBrowserRouter([
