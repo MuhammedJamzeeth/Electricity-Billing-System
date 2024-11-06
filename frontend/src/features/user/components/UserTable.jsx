@@ -20,12 +20,14 @@ import {
 import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
 import EditIcon from '@mui/icons-material/Edit';
 import useUsers from '../hooks/useUsers';
-import { toast } from 'react-toastify'; // Import toast
+import { toast } from 'react-toastify';
+import EditConsumerForm from './EditConsumerForm'; 
 
-function UserTable({ onEdit }) {
+function UserTable() {
   const { users, loading, error, deleteUser } = useUsers();
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [deletingAccountNo, setDeletingAccountNo] = useState(null);
+  const [editConsumer, setEditConsumer] = useState(null);
 
   const handleOpenConfirmation = () => {
     setConfirmDeleteOpen(true);
@@ -37,21 +39,29 @@ function UserTable({ onEdit }) {
 
   const handleDeleteClick = (accountNo) => {
     setDeletingAccountNo(accountNo);
-    handleOpenConfirmation(); // Open the confirmation dialog
+    handleOpenConfirmation();
   };
 
   const handleDeleteConfirm = async () => {
     if (deletingAccountNo) {
       try {
         await deleteUser(deletingAccountNo);
-        toast.success('Consumer deleted successfully!'); // Show success message
+        toast.success('Consumer deleted successfully!');
       } catch (error) {
-        toast.error('Failed to delete consumer. Please try again.'); // Show error message
+        toast.error('Failed to delete consumer. Please try again.');
       } finally {
         handleCloseConfirmation();
         setDeletingAccountNo(null);
       }
     }
+  };
+
+  const handleEditClick = (consumer) => {
+    setEditConsumer(consumer); 
+  };
+
+  const handleEditCancel = () => {
+    setEditConsumer(null); 
   };
 
   if (loading) {
@@ -102,11 +112,11 @@ function UserTable({ onEdit }) {
                   <TableCell align="center">{user.phase}</TableCell>
                   <TableCell align="center">{user.contact_number}</TableCell>
                   <TableCell align="center">
-                    <Button onClick={() => onEdit(user)}>
+                    <Button onClick={() => handleEditClick(user)}>
                       <EditIcon />
                     </Button>
-                    <Button onClick={() => handleDeleteClick(user.accountNo)}>
-                      <DeleteForeverOutlinedIcon />
+                    <Button onClick={() => handleDeleteClick(user.accountNo)} sx={{ color: 'red' }}>
+                      <DeleteForeverOutlinedIcon sx={{ color: 'inherit' }} />
                     </Button>
                   </TableCell>
                 </TableRow>
@@ -132,6 +142,13 @@ function UserTable({ onEdit }) {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {editConsumer && (
+        <EditConsumerForm
+          consumer={editConsumer}
+          onCancel={handleEditCancel}
+        />
+      )}
     </div>
   );
 }

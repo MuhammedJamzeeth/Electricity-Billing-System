@@ -6,6 +6,7 @@ function useUsers() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Fetch users on component mount
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -26,6 +27,7 @@ function useUsers() {
     fetchUsers();
   }, []);
 
+  // Function to add a consumer
   const addConsumer = async (formData) => {
     try {
       const response = await axios.post('http://localhost:8081/consumers/add', formData);
@@ -41,11 +43,12 @@ function useUsers() {
     }
   };
 
+  // Function to delete a consumer
   const deleteUser = async (accountNo) => {
     try {
       const response = await axios.delete(`http://localhost:8081/consumers/delete/${accountNo}`);
       if (response.status === 200) {
-        setUsers((prevUsers) => prevUsers.filter(user => user.accountNo !== accountNo));
+        setUsers((prevUsers) => prevUsers.filter((user) => user.accountNo !== accountNo));
       } else {
         console.error('Failed to delete consumer:', response.statusText);
       }
@@ -55,7 +58,27 @@ function useUsers() {
     }
   };
 
-  return { users, loading, error, addConsumer, deleteUser };
+  // Function to update a consumer
+  const updateUser = async (accountNo, updatedData) => {
+    try {
+      const response = await axios.put(`http://localhost:8081/consumers/update/${accountNo}`, updatedData);
+      if (response.status === 200) {
+        setUsers((prevUsers) =>
+          prevUsers.map((user) =>
+            user.accountNo === accountNo ? { ...user, ...response.data } : user
+          )
+        );
+        return response.data;
+      } else {
+        console.error('Failed to update consumer:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error updating consumer:', error);
+      throw error;
+    }
+  };
+
+  return { users, loading, error, addConsumer, deleteUser, updateUser };
 }
 
 export default useUsers;

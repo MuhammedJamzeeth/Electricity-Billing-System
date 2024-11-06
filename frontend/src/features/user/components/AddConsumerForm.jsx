@@ -16,9 +16,8 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const AddConsumerForm = ({ open, onClose, onAdd, refreshTable, consumerData }) => {
+const AddConsumerForm = ({ open, onClose, onAdd, refreshTable }) => {
   const [formData, setFormData] = useState({
-    id: '',
     accountNo: '',
     firstName: '',
     lastName: '',
@@ -31,15 +30,13 @@ const AddConsumerForm = ({ open, onClose, onAdd, refreshTable, consumerData }) =
   });
 
   const [formErrors, setFormErrors] = useState({});
+  const [consumerId, setConsumerId] = useState(1);  // Counter to simulate auto-incremented ID
 
   useEffect(() => {
-    if (consumerData) {
-      setFormData(consumerData); // Populate form with existing consumer data for update
-    } else {
-      // Reset the form for adding a new consumer
+    if (open) {
       resetForm();
     }
-  }, [consumerData, open]);
+  }, [open]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -48,7 +45,6 @@ const AddConsumerForm = ({ open, onClose, onAdd, refreshTable, consumerData }) =
 
   const resetForm = () => {
     setFormData({
-      id: '',
       accountNo: '',
       firstName: '',
       lastName: '',
@@ -85,43 +81,34 @@ const AddConsumerForm = ({ open, onClose, onAdd, refreshTable, consumerData }) =
     }
 
     try {
-      let response;
+      // Generate new consumer ID and prepare data
+      const newConsumerData = { ...formData, id: consumerId };
 
-      if (formData.id) {
-        // Update existing consumer
-        response = await axios.put(`http://localhost:8081/consumers/update/${formData.id}`, formData);
-      } else {
-        // Add new consumer
-        const consumersResponse = await axios.get('http://localhost:8081/consumers');
-        const consumers = consumersResponse.data;
-        const newId = consumers.length > 0 ? Math.max(...consumers.map(c => c.id)) + 1 : 1;
-
-        const newConsumerData = { ...formData, id: newId };
-        response = await axios.post('http://localhost:8081/consumers/add', newConsumerData);
-      }
-
-      console.log("Form data being sent:", formData);
-      console.log("API Response:", response.data);
-
+      // Make the POST request to add a new consumer
+      const response = await axios.post('http://localhost:8081/consumers/add', newConsumerData);
+      
       if (response.status === 200 || response.status === 201) {
-        onAdd(response.data);
-        toast.success('Consumer saved successfully!');
-        resetForm(); // Reset form after successful submission
-        refreshTable(); // Refresh the table to show the updated data
-        onClose(); // Close the dialog
+        onAdd(response.data);  // Notify parent component with the new consumer data
+        toast.success('Consumer added successfully!');
+        resetForm();  // Reset the form after successful submission
+        refreshTable();  // Optionally refresh the table if needed
+        onClose();  // Close the dialog
+
+        // Increment the consumerId counter for the next insertion
+        setConsumerId((prevId) => prevId + 1);
       } else {
         throw new Error('Invalid response data');
       }
     } catch (error) {
       console.error('Error submitting form:', error);
-      toast.error('Failed to save consumer. Please try again.');
+      toast.error('Failed to add consumer. Please try again.');
     }
   };
 
   return (
     <>
       <Dialog open={open} onClose={onClose}>
-        <DialogTitle>{formData.id ? 'Update Consumer' : 'Add Consumer'}</DialogTitle>
+        <DialogTitle>Add Consumer</DialogTitle>
         <DialogContent>
           <form onSubmit={handleSubmit}>
             <TextField
@@ -231,7 +218,7 @@ const AddConsumerForm = ({ open, onClose, onAdd, refreshTable, consumerData }) =
             />
             <DialogActions>
               <Button onClick={onClose}>Cancel</Button>
-              <Button type="submit" color="primary">{formData.id ? 'Update' : 'Add'}</Button>
+              <Button type="submit" color="primary">Add</Button>
             </DialogActions>
           </form>
         </DialogContent>

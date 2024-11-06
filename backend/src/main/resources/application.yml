@@ -6,8 +6,8 @@ spring:
     name: electricity-billing-api
   datasource:
     url: jdbc:mysql://localhost:3306/electricity-billing-system
-    username: root
-    password: 12345
+    username: group07
+    password: 1234
   jpa:
     hibernate:
       ddl-auto: none
