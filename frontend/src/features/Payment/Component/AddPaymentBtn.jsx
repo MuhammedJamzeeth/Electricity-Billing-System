@@ -1,5 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useState } from 'react';
+import Notification from './Notification.jsx';
+import ConfirmationDialog from "./ConfirmationDialog.jsx";
 
 // eslint-disable-next-line react/prop-types
 const InputField = ({ label, type, value, onChange, disabled = false, name }) => (
@@ -27,6 +29,8 @@ const AddPaymentBtn = () => {
         amount: '',
         paymentDate: '',
     });
+    const [notification, setNotification] = useState('');
+    const [showConfirmation, setShowConfirmation] = useState(false);
 
     const toggleForm = () => setShowForm((prev) => !prev);
 
@@ -50,9 +54,9 @@ const AddPaymentBtn = () => {
         }
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const handleConfirmSubmit = async () => {
         const { accountNumber, receiptNumber, amount, paymentDate } = formData;
+        setShowConfirmation(false);
 
         try {
             const response = await fetch('http://localhost:8081/payments/add', {
@@ -67,7 +71,7 @@ const AddPaymentBtn = () => {
             });
 
             if (response.ok) {
-                console.log('Payment created:', await response.json());
+                setNotification('New payment added successfully');
                 setFormData({ accountNumber: '', customerName: '', receiptNumber: '', amount: '', paymentDate: '' });
                 setShowForm(false);
             } else {
@@ -76,6 +80,11 @@ const AddPaymentBtn = () => {
         } catch (error) {
             console.error('Error creating payment:', error);
         }
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        setShowConfirmation(true); // Show confirmation dialog
     };
 
     return (
@@ -135,7 +144,10 @@ const AddPaymentBtn = () => {
                                 </button>
                                 <button
                                     type="button"
-                                    onClick={toggleForm}
+                                    onClick={() => {
+                                        toggleForm();
+                                        setNotification('Payment cancelled');
+                                    }}
                                     className="bg-gray-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-gray-600 transition duration-200"
                                 >
                                     Cancel
@@ -145,6 +157,16 @@ const AddPaymentBtn = () => {
                     </div>
                 </div>
             )}
+
+            {/* Confirmation Dialog */}
+            <ConfirmationDialog
+                isOpen={showConfirmation}
+                onConfirm={handleConfirmSubmit}
+                onCancel={() => setShowConfirmation(false)}
+            />
+
+            {/* Notification */}
+            <Notification message={notification} onClose={() => setNotification('')} />
         </div>
     );
 };

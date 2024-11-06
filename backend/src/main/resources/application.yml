@@ -26,8 +26,8 @@ spring:
     locations: classpath:db/migration
     baseline-on-migrate: true
 
-#logging:
-#  level:
-#    org:
-#      hibernate:
-#        SQL: debug
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: off

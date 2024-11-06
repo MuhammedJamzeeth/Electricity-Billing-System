@@ -1,4 +1,4 @@
-INSERT INTO admin (username, password) VALUES ('admin', 'admin');
+INSERT INTO admin (username, password) VALUES ('admin', '$2a$10$hetGOYyl53foqdLMC.kEUeT6HbDGG9FKoKalGOqKUOy0cOk5ZOv3a');
 
 
 INSERT INTO consumer (id,account_no,first_name, last_name, email, meter_no,join_date, address, phase, contact_number)
@@ -19,7 +19,6 @@ VALUES
     (14,1237324567,'Pradeep', 'Wijesinghe', 'pradeep.wijesinghe@example.com', 1000000014, '2024-08-21','No. 75, Main Street, Colombo 07, Sri Lanka', '1-Phase', '+94-76-456-7890'),
     (15,9825761543,'Thilina', 'Kumara', 'thilina.kumara@example.com', 1000000015, '2024-08-21','No. 80, Main Street, Colombo 07, Sri Lanka', '1-Phase', '+94-76-567-8901');
 
-
  INSERT INTO payment (receipt_number, amount, payment_date, account_number) VALUES
             (10001, 150.75, '2024-01-15', 4561897562),
             (10002, 200.50, '2024-02-20', 6789543862),
@@ -34,5 +33,17 @@ VALUES
          (8947612864, '2024-04-01', '2024-04-30', 250, 240, 300.00, 300.00),
          (4589756176, '2024-05-01', '2024-05-31', 180, 190, 175.25, 175.25);
 
+-- praveen
+INSERT INTO `electricity-billing-system`.`branch` (`branch_Id`, `branch_name`, `location`, `branch_Email`, `contact_no`) VALUES ('2', 'Colombo CEB', 'Colombo - 11', 'CEB_colombo@gmail.com', '011-3454675');
 
-
+INSERT INTO employee (emp_Id, emp_Name, address, branch_Id, contact_No) VALUES
+(1001, 'Nimal Perera', '123 Galle Road, Colombo', 2, '0712345678'),
+(1002, 'Sunil Fernando', '456 Kandy Road, Kandy', 2, '0723456789'),
+(1003, 'Priya Wijesekera', '789 Negombo Street, Negombo', 2, '0734567890'),
+(1004, 'Kavinda Silva', '321 Jaffna Road, Jaffna', 2, '0745678901'),
+(1005, 'Dilani Gunasekara', '654 Matara Avenue, Matara', 2, '0756789012'),
+(1006, 'Amila Rajapaksha', '987 Anuradhapura Road, Anuradhapura', 2, '0767890123'),
+(1007, 'Ruwan Wickramasinghe', '135 Galle Face, Colombo', 2, '0778901234'),
+(1008, 'Tharindu Jayasuriya', '246 Colombo Road, Nugegoda', 2, '0789012345'),
+(1009, 'Chathura Bandara', '357 Kandy Road, Nuwara Eliya', 2, '0790123456'),
+(1010, 'Lakshitha Perera', '468 Batticaloa Road, Batticaloa', 2, '0801234567');

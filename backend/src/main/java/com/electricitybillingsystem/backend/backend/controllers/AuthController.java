@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/admin")
+@RequestMapping("/auth")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class AuthController {
 
@@ -19,7 +19,6 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<String> admin(@Valid @RequestBody AdminLoginRequestDto loginRequest) {
         var response = adminService.login(loginRequest.getUsername(), loginRequest.getPassword());
-
         return ResponseEntity.ok(response);
     }
 
