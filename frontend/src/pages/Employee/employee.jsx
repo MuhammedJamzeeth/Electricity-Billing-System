@@ -358,7 +358,7 @@ const EmployeeTable = () => {
 
   // Fetch employees data
   useEffect(() => {
-    fetch('http://localhost:8080/employees')
+    fetch('http://localhost:8081/employees')
         .then(response => response.json())
         .then(data => {
           setEmployees(data);
@@ -386,7 +386,7 @@ const EmployeeTable = () => {
 
   const handleUpdateEmployee = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/employees/update/${currentEmployee.empId}`, {
+      const response = await fetch(`http://localhost:8081/employees/update/${currentEmployee.empId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -405,7 +405,7 @@ const EmployeeTable = () => {
 
   const handleDeleteEmployee = async (empId) => {
     try {
-      const response = await fetch(`http://localhost:8080/employees/delete/${empId}`, {
+      const response = await fetch(`http://localhost:8081/employees/delete/${empId}`, {
         method: 'DELETE',
       });
 
