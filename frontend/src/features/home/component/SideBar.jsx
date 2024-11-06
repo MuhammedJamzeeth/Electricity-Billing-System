@@ -5,6 +5,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import StickyNote2Icon from '@mui/icons-material/StickyNote2';
 import {Link} from "react-router-dom";
 
+
 const SideBar = () => {
     return (
         <div className="relative h-full flex w-[290px] bg-white flex-col">
@@ -27,12 +28,14 @@ const SideBar = () => {
                         Payment
                     </div>
                 </Link>
-                <div className="flex items-center pl-4">
+                
+                <Link to={'/user'} className="flex items-center pl-4">
                     <PersonIcon className="text-[#A3AED0]"/>
                     <div className="font-poppin pl-4 text-[#A3AED0] text-[14px] [line-height:30px] [letter-spacing:-0.32px]">
                         Manage User
                     </div>
-                </div>
+                </Link>
+                
                 <div className="flex items-center pl-4">
                     <StickyNote2Icon className="text-[#A3AED0]"/>
                     <div className="font-poppin pl-4 text-[#A3AED0] text-[14px] [line-height:30px] [letter-spacing:-0.32px]">

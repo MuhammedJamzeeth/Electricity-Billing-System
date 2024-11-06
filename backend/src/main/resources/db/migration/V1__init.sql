@@ -25,24 +25,21 @@ CREATE INDEX idx_users_name ON users(name);
 
 
 CREATE TABLE IF NOT EXISTS consumer (
-<<<<<<< Updated upstream
     id INT NOT NULL,
-=======
->>>>>>> Stashed changes
     account_no BIGINT PRIMARY KEY,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
     email VARCHAR(50) UNIQUE NOT NULL,
     meter_no BIGINT UNIQUE NOT NULL,
-    join_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    join_date DATE NOT NULL,
     address VARCHAR(255) NOT NULL,
     phase VARCHAR(15) NOT NULL,
     contact_number VARCHAR(15) NOT NULL
     );
 
-<<<<<<< Updated upstream
+
 CREATE INDEX idx_consumer_id ON consumer(id);
-=======
+
 CREATE TABLE IF NOT EXISTS payment (
     payment_id INT AUTO_INCREMENT PRIMARY KEY,
     receipt_number INT UNIQUE NOT NULL,
@@ -77,4 +74,4 @@ CREATE TABLE IF NOT EXISTS EBill (
    total_bill DECIMAL(10, 2),
    FOREIGN KEY (account_no) REFERENCES consumer(account_no)
 );
->>>>>>> Stashed changes
+
