@@ -5,7 +5,11 @@ import SignIn from "./pages/Auth/SignIn.jsx";
 import SignUp from "./pages/Auth/SignUp.jsx";
 import HomeLayout from "./pages/Home/HomeLayout.jsx";
 import Dashboard from "./pages/Home/Dashboard.jsx";
+<<<<<<< Updated upstream
 import User from "./pages/Home/User.jsx";
+=======
+import Payment from "./pages/Payment/Payment.jsx";
+>>>>>>> Stashed changes
 
 const router = createBrowserRouter([
     {
@@ -34,6 +38,16 @@ const router = createBrowserRouter([
                 path: "register",
                 element: <SignUp/>
             }
+        ]
+    },
+    {
+        path: "/payment",
+        element: <HomeLayout />,
+        children: [
+            {
+                path: "",
+                element: <Payment/>
+            },
         ]
     }
 
