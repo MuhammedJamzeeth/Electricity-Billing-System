@@ -1,5 +1,4 @@
 import {createBrowserRouter} from "react-router-dom";
-import Home from "./pages/Home.jsx";
 import AuthLayout from "./pages/Auth/AuthLayout.jsx";
 import SignIn from "./pages/Auth/SignIn.jsx";
 import SignUp from "./pages/Auth/SignUp.jsx";
@@ -9,7 +8,7 @@ import Dashboard from "./pages/Home/Dashboard.jsx";
 import User from "./pages/Home/User.jsx";
 
 import Payment from "./pages/Payment/Payment.jsx";
-import UserTable from "./features/user/components/UserTable.jsx";
+import Branches from "./pages/Home/Branches.jsx";
 
 
 const router = createBrowserRouter([
@@ -20,6 +19,18 @@ const router = createBrowserRouter([
             {
                 path: "",
                 element: <Dashboard/>
+            },
+            {
+                path: "branch",
+                element: <Branches/>
+            },
+            {
+                path: "payment",
+                element: <Payment/>
+            },
+            {
+                path: "user",
+                element: <User/>
             }
         ]
     },
@@ -37,26 +48,6 @@ const router = createBrowserRouter([
             }
         ]
     },
-    {
-        path: "/payment",
-        element: <HomeLayout />,
-        children: [
-            {
-                path: "",
-                element: <Payment/>
-            },
-        ]
-    },
-    {
-        path: "/user",
-        element: <HomeLayout />,
-        children: [
-            {
-                path: "",
-                element: <User/>
-            },
-        ]
-    }
 
 ]);
 

@@ -1,6 +1,5 @@
 package com.electricitybillingsystem.backend.backend.dto;
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,4 +13,7 @@ public class AdminLoginRequestDto {
 
     @NotBlank(message = "password must not be empty")
     private String password;
+
+    @NotBlank(message = "branch must not be empty")
+    private String branch;
 }

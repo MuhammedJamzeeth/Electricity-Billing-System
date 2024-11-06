@@ -1,4 +1,4 @@
-INSERT INTO admin (username, password) VALUES ('admin', 'admin');
+INSERT INTO admin (username, password) VALUES ('admin', '$2a$10$hetGOYyl53foqdLMC.kEUeT6HbDGG9FKoKalGOqKUOy0cOk5ZOv3a');
 
 
 INSERT INTO consumer (id,account_no,first_name, last_name, email, meter_no,join_date, address, phase, contact_number)
