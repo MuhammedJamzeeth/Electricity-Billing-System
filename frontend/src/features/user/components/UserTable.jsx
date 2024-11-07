@@ -85,7 +85,7 @@ function UserTable() {
       <Paper sx={{ width: '100%', overflow: 'hidden' }}>
         <TableContainer component={Paper} sx={{ maxHeight: '600px', overflowY: 'auto' }}>
           <Table stickyHeader>
-            <TableHead>
+            <TableHead  >
               <TableRow>
                 <TableCell align="center">Id</TableCell>
                 <TableCell align="center">Account No</TableCell>
