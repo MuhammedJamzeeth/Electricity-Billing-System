@@ -38,6 +38,7 @@ public class Branch {
     @Column(name = "password")
     private String password;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Consumer> consumers;
 
