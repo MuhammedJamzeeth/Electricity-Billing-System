@@ -43,7 +43,7 @@ function User() {
   };
 
   return (
-    <div className="mt-4">
+    <div className="ml-6">
       <Grid container spacing={2} alignItems="flex-end">
         {/* Search Box */}
         <Grid item xs={8} sm={4}>
@@ -68,7 +68,7 @@ function User() {
 
         <Grid item xs={4} sm={7.5} textAlign="end">
           <Button variant="contained" color="primary" onClick={handleOpenForm}>
-            Add User
+            Add Consumer
           </Button>
         </Grid>
       </Grid>

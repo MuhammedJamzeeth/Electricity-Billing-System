@@ -94,13 +94,13 @@ function UserTable({ searchTerm }) {
   }
 
   return (
-    <div>
-      <Paper sx={{ width: '100%', overflow: 'hidden', borderRadius: "20px" }}>
+    <div >
+      <Paper sx={{ width: '97%', overflow: 'hidden', borderRadius: "20px" }}>
         <TableContainer component={Paper} sx={{ maxHeight: '500px', overflowY: 'auto' }}>
           <Table stickyHeader>
             <TableHead>
               <TableRow>
-                <TableCell align="center">Id</TableCell>
+                
                 <TableCell align="center">Account No</TableCell>
                 <TableCell align="center">Full Name</TableCell>
                 <TableCell align="center">Email</TableCell>
@@ -115,14 +115,11 @@ function UserTable({ searchTerm }) {
             <TableBody>
               {filteredUsers.map((user, index) => (
                 <TableRow key={user.accountNo} hover>
-                  <TableCell align="center">{index + 1}</TableCell> {/* Display incremental ID */}
                   <TableCell align="center">{user.accountNo}</TableCell>
                   <TableCell align="center">{`${user.firstName} ${user.lastName}`}</TableCell>
                   <TableCell align="center">{user.email}</TableCell>
                   <TableCell align="center">{user.meterNo}</TableCell>
-                  <TableCell align="center">
-                    {new Date(user.joinDate).toLocaleDateString('en-GB')}
-                  </TableCell>
+                  <TableCell align="center">{new Date(user.joinDate).toLocaleDateString('en-GB')}</TableCell>
                   <TableCell align="center">{user.address}</TableCell>
                   <TableCell align="center">{user.phase}</TableCell>
                   <TableCell align="center">{user.contact_number}</TableCell>

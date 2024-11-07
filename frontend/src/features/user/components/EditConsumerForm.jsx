@@ -26,6 +26,7 @@ function EditConsumerForm({ consumer, onCancel }) {
     meterNo: '',
     joinDate: '',
     phase: '1-Phase',
+    branch: ''
   });
 
   useEffect(() => {
@@ -39,6 +40,7 @@ function EditConsumerForm({ consumer, onCancel }) {
         meterNo: consumer.meterNo || '',
         joinDate: consumer.joinDate || '',
         phase: consumer.phase || '1-Phase',
+        branch: consumer.branch || ''
       });
     }
   }, [consumer]);
@@ -48,28 +50,36 @@ function EditConsumerForm({ consumer, onCancel }) {
     setFormData({ ...formData, [name]: value });
   };
 
+  const validateForm = () => {
+    const requiredFields = ['firstName', 'lastName', 'email', 'contact_number', 'address', 'meterNo', 'branch'];
+    for (const field of requiredFields) {
+      if (!formData[field]) {
+        toast.error(`Please fill out the ${field.replace('_', ' ')} field.`);
+        return false;
+      }
+    }
+    return true;
+  };
+
   const handleSave = async () => {
+    if (!validateForm()) return;
+
     try {
       const updatedConsumer = {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        email: formData.email,
-        contact_number: formData.contact_number,
-        address: formData.address,
-        meterNo: formData.meterNo,
-        joinDate: formData.joinDate,
-        phase: formData.phase,
+        ...formData  // This includes firstName, lastName, email, contact_number, address, meterNo, joinDate, phase, and branch
       };
-
+  
       const response = await updateUser(consumer.accountNo, updatedConsumer);
-      if (response) {
+      
+      if (response && (response.status === 200 || response.status === 201 || response === true)) {
         toast.success('Consumer details updated successfully!');
-        onCancel();  // Close the dialog
+        onCancel();
       } else {
-        toast.error('Failed to update consumer details');
+        throw new Error('Unexpected response');
       }
     } catch (error) {
-      toast.error('Error saving changes');
+      console.error('Error saving changes:', error);
+      toast.error('Failed to update consumer details');
     }
   };
 
@@ -144,6 +154,15 @@ function EditConsumerForm({ consumer, onCancel }) {
                 <MenuItem value="3-Phase">3-Phase</MenuItem>
               </Select>
             </FormControl>
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              label="Branch"
+              name="branch"
+              value={formData.branch}
+              onChange={handleChange}
+              fullWidth
+            />
           </Grid>
         </Grid>
       </DialogContent>

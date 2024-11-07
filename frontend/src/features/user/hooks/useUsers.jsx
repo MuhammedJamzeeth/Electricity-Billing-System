@@ -40,9 +40,7 @@ function useUsers() {
 
   const deleteUser = async (accountNo) => {
     try {
-      console.log(accountNo);
       const response = await axios.delete(`http://localhost:8081/consumers/delete/${accountNo}`);
-
       if (response.status === 200) {
         setUsers((prevUsers) => prevUsers.filter((user) => user.accountNo !== accountNo));
       }
@@ -55,8 +53,11 @@ function useUsers() {
     try {
       const response = await axios.put(`http://localhost:8081/consumers/update/${accountNo}`, updatedData);
       if (response.status === 200) {
+        // Update the state to reflect the changes
         setUsers((prevUsers) =>
-          prevUsers.map((user) => (user.accountNo === accountNo ? response.data : user))
+          prevUsers.map((user) =>
+            user.accountNo === accountNo ? { ...user, ...updatedData } : user
+          )
         );
       }
     } catch (error) {

@@ -32,9 +32,9 @@ const AddConsumerForm = ({ open, onClose, onAdd, refreshTable }) => {
 
   const [formErrors, setFormErrors] = useState({});
   const [isValid, setIsValid] = useState({
-    accountNo: false,
-    email: false,
-    contact_number: false,
+    accountNo: true,
+    email: true,
+    contact_number: true,
   });
 
   useEffect(() => {
@@ -61,7 +61,6 @@ const AddConsumerForm = ({ open, onClose, onAdd, refreshTable }) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
 
-    // Validate fields based on name
     if (name === 'accountNo') {
       validateAccountNo(value);
     } else if (name === 'email') {
@@ -86,39 +85,37 @@ const AddConsumerForm = ({ open, onClose, onAdd, refreshTable }) => {
     });
     setFormErrors({});
     setIsValid({
-      accountNo: false,
-      email: false,
-      contact_number: false,
+      accountNo: true,
+      email: true,
+      contact_number: true,
     });
   };
 
-  const validateForm = () => {
-    const errors = {};
-    if (!formData.accountNo) errors.accountNo = 'Account number is required.';
-    if (!formData.firstName) errors.firstName = 'First name is required.';
-    if (!formData.lastName) errors.lastName = 'Last name is required.';
-    if (!formData.email) errors.email = 'Email is required.';
-    if (!formData.meterNo) errors.meterNo = 'Meter number is required.';
-    if (!formData.joinDate) errors.joinDate = 'Join date is required.';
-    if (!formData.address) errors.address = 'Address is required.';
-    if (!formData.phase) errors.phase = 'Phase is required.';
-    if (!formData.contact_number) errors.contact_number = 'Contact number is required.';
-    return errors;
-  };
-
   const validateAccountNo = (value) => {
-    const isValid = /^[0-9]{10}$/.test(value);
-    setIsValid((prev) => ({ ...prev, accountNo: isValid }));
+    const isValidAccount = /^[0-9]{10}$/.test(value);
+    setIsValid((prev) => ({ ...prev, accountNo: isValidAccount }));
+    setFormErrors((prevErrors) => ({
+      ...prevErrors,
+      accountNo: isValidAccount ? '' : 'Account number must be 10 digits',
+    }));
   };
 
   const validateEmail = (value) => {
-    const isValid = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value);
-    setIsValid((prev) => ({ ...prev, email: isValid }));
+    const isValidEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value);
+    setIsValid((prev) => ({ ...prev, email: isValidEmail }));
+    setFormErrors((prevErrors) => ({
+      ...prevErrors,
+      email: isValidEmail ? '' : 'Enter a valid email',
+    }));
   };
 
   const validateContactNumber = (value) => {
-    const isValid = /^\+94-\d{2}-\d{3}-\d{4}$/.test(value);
-    setIsValid((prev) => ({ ...prev, contact_number: isValid }));
+    const isValidContact = /^\+94-\d{2}-\d{3}-\d{4}$/.test(value);
+    setIsValid((prev) => ({ ...prev, contact_number: isValidContact }));
+    setFormErrors((prevErrors) => ({
+      ...prevErrors,
+      contact_number: isValidContact ? '' : 'Format: +94-xx-xxx-xxxx',
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -158,18 +155,11 @@ const AddConsumerForm = ({ open, onClose, onAdd, refreshTable }) => {
               label="Account No"
               type="text"
               fullWidth
-              error={!!formErrors.accountNo || !isValid.accountNo}
-              helperText={formErrors.accountNo || (!isValid.accountNo && 'Account number must be 10 digits')}
+              error={!isValid.accountNo}
+              helperText={formErrors.accountNo}
               value={formData.accountNo}
               onChange={handleInputChange}
-              sx={{
-                '& .MuiInputBase-root': {
-                  borderColor: isValid.accountNo ? 'blue' : (formErrors.accountNo ? 'red' : ''),
-                },
-              }}
-              InputProps={{
-                endAdornment: isValid.accountNo && <span style={{ color: 'green' }}>✔</span>,
-              }}
+              placeholder="Enter a 10-digit account number"
             />
             <TextField
               margin="dense"
@@ -181,6 +171,7 @@ const AddConsumerForm = ({ open, onClose, onAdd, refreshTable }) => {
               helperText={formErrors.firstName}
               value={formData.firstName}
               onChange={handleInputChange}
+              placeholder="Enter first name"
             />
             <TextField
               margin="dense"
@@ -192,6 +183,7 @@ const AddConsumerForm = ({ open, onClose, onAdd, refreshTable }) => {
               helperText={formErrors.lastName}
               value={formData.lastName}
               onChange={handleInputChange}
+              placeholder="Enter last name"
             />
             <TextField
               margin="dense"
@@ -199,18 +191,11 @@ const AddConsumerForm = ({ open, onClose, onAdd, refreshTable }) => {
               label="Email"
               type="email"
               fullWidth
-              error={!!formErrors.email || !isValid.email}
-              helperText={formErrors.email || (!isValid.email && 'Enter a valid email')}
+              error={!isValid.email}
+              helperText={formErrors.email}
               value={formData.email}
               onChange={handleInputChange}
-              sx={{
-                '& .MuiInputBase-root': {
-                  borderColor: isValid.email ? 'blue' : (formErrors.email ? 'red' : ''),
-                },
-              }}
-              InputProps={{
-                endAdornment: isValid.email && <span style={{ color: 'green' }}>✔</span>,
-              }}
+              placeholder="Enter a valid email"
             />
             <TextField
               margin="dense"
@@ -222,6 +207,7 @@ const AddConsumerForm = ({ open, onClose, onAdd, refreshTable }) => {
               helperText={formErrors.meterNo}
               value={formData.meterNo}
               onChange={handleInputChange}
+              placeholder="Enter meter number"
             />
             <TextField
               margin="dense"
@@ -245,6 +231,7 @@ const AddConsumerForm = ({ open, onClose, onAdd, refreshTable }) => {
               helperText={formErrors.address}
               value={formData.address}
               onChange={handleInputChange}
+              placeholder="Enter address"
             />
             <FormControl fullWidth margin="dense" error={!!formErrors.phase}>
               <InputLabel id="phase-select-label">Phase</InputLabel>
@@ -268,26 +255,15 @@ const AddConsumerForm = ({ open, onClose, onAdd, refreshTable }) => {
               label="Contact Number"
               type="text"
               fullWidth
-              error={!!formErrors.contact_number || !isValid.contact_number}
-              helperText={formErrors.contact_number || (!isValid.contact_number && 'Enter a valid contact number')}
+              error={!isValid.contact_number}
+              helperText={formErrors.contact_number}
               value={formData.contact_number}
               onChange={handleInputChange}
-              sx={{
-                '& .MuiInputBase-root': {
-                  borderColor: isValid.contact_number ? 'blue' : (formErrors.contact_number ? 'red' : ''),
-                },
-              }}
-              InputProps={{
-                endAdornment: isValid.contact_number && <span style={{ color: 'green' }}>✔</span>,
-              }}
+              placeholder="Enter contact number (e.g., +94-xx-xxx-xxxx)"
             />
             <DialogActions>
-              <Button onClick={onClose} color="primary">
-                Cancel
-              </Button>
-              <Button type="submit" color="primary">
-                Add Consumer
-              </Button>
+              <Button color="secondary"   className=' hover:bg-purple-300'  onClick={onClose} >Cancel</Button>
+              <Button className=' hover:bg-blue-300  ' type="submit" color="primary">Add Consumer</Button>
             </DialogActions>
           </form>
         </DialogContent>

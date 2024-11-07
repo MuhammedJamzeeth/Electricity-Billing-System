@@ -56,6 +56,7 @@ public class ConsumerServiceImpl implements ConsumerService {
             consumer.setAddress(consumerDetails.getAddress());
             consumer.setPhase(consumerDetails.getPhase());
             consumer.setContact_number(consumerDetails.getContact_number());
+            consumer.setBranch(consumerDetails.getBranch());
             return consumerRepository.save(consumer);
         } else {
             throw new RuntimeException("Consumer not found with account number: " + accountNo);
