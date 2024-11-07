@@ -23,6 +23,18 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE INDEX idx_admin_username ON admin(username);
 CREATE INDEX idx_users_name ON users(name);
 
+CREATE TABLE branch (
+                        branch_Id INT PRIMARY KEY AUTO_INCREMENT,
+                        branch_name VARCHAR(100),
+                        location VARCHAR(200),
+                        branch_username VARCHAR(100),
+                        contact_no VARCHAR(20),
+                        password VARCHAR(200),
+                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Fayas --------------------------------------------
+
 CREATE TABLE IF NOT EXISTS consumer (
     id INT NOT NULL,
     account_no BIGINT PRIMARY KEY,
@@ -38,6 +50,8 @@ CREATE TABLE IF NOT EXISTS consumer (
 
 
 CREATE INDEX idx_consumer_id ON consumer(id);
+
+-- Siyam --------------------------------------------
 
 CREATE TABLE IF NOT EXISTS payment (
     payment_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -62,6 +76,9 @@ END //
 
 DELIMITER ;
 
+-- Akthar --------------------------------------------
+
+
 CREATE TABLE IF NOT EXISTS EBill (
    bill_id BIGINT AUTO_INCREMENT PRIMARY KEY,
    account_no BIGINT NOT NULL,
@@ -74,15 +91,7 @@ CREATE TABLE IF NOT EXISTS EBill (
    FOREIGN KEY (account_no) REFERENCES consumer(account_no)
 );
 
--- praveen
-
-CREATE TABLE branch (
-    branch_Id INT PRIMARY KEY AUTO_INCREMENT,
-    branch_name VARCHAR(100),
-    location VARCHAR(200),
-    branch_Email VARCHAR(100),
-    contact_no VARCHAR(20)
-);
+-- Praveen --------------------------------------------
 
 CREATE TABLE IF NOT EXISTS employee (
     emp_Id INT AUTO_INCREMENT PRIMARY KEY,
