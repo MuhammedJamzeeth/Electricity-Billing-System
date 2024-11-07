@@ -30,16 +30,19 @@ function UserTable({ searchTerm }) {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [consumerToDelete, setConsumerToDelete] = useState(null);
 
+  // Ensure users data is being set properly
   useEffect(() => {
-    // Filter users based on the search term passed as a prop
-    if (searchTerm) {
-      setFilteredUsers(
-        users.filter((user) =>
-          user.accountNo.toString().toLowerCase().includes(searchTerm.toLowerCase())
-        )
-      );
-    } else {
-      setFilteredUsers(users);
+    if (users) {
+      // Filter users based on the search term
+      if (searchTerm) {
+        setFilteredUsers(
+          users.filter((user) =>
+            user.accountNo.toString().toLowerCase().includes(searchTerm.toLowerCase())
+          )
+        );
+      } else {
+        setFilteredUsers(users); // Set all users if no search term
+      }
     }
   }, [users, searchTerm]);
 
@@ -98,7 +101,7 @@ function UserTable({ searchTerm }) {
         <TableContainer component={Paper} sx={{ maxHeight: '600px', overflowY: 'auto' }}>
           <Table stickyHeader>
             <TableHead>
-              <TableRow sx={{ backgroundColor: 'blue' }}>
+              <TableRow>
                 <TableCell align="center">Id</TableCell>
                 <TableCell align="center">Account No</TableCell>
                 <TableCell align="center">Full Name</TableCell>
@@ -112,6 +115,7 @@ function UserTable({ searchTerm }) {
               </TableRow>
             </TableHead>
             <TableBody>
+
               {filteredUsers.map((user) => (
                 <TableRow key={user.accountNo} hover>
                   <TableCell align="center">{user.id}</TableCell>
@@ -140,17 +144,9 @@ function UserTable({ searchTerm }) {
         </TableContainer>
       </Paper>
 
-      {/* Edit Consumer Form Dialog */}
-      <EditConsumerForm
-        consumer={selectedConsumer}
-        onCancel={handleCloseEditDialog}
-      />
+      <EditConsumerForm consumer={selectedConsumer} onCancel={handleCloseEditDialog} />
 
-      {/* Delete Confirmation Dialog */}
-      <Dialog
-        open={openDeleteDialog}
-        onClose={handleDeleteCancel}
-      >
+      <Dialog open={openDeleteDialog} onClose={handleDeleteCancel}>
         <DialogTitle>Confirm Deletion</DialogTitle>
         <DialogContent>
           <Typography>Are you sure you want to delete this consumer?</Typography>

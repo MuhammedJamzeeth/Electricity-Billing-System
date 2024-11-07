@@ -54,9 +54,8 @@ function useUsers() {
       const response = await axios.put(`http://localhost:8081/consumers/update/${accountNo}`, updatedData);
       if (response.status === 200) {
         setUsers((prevUsers) =>
-          prevUsers.map((user) => (user.accountNo === accountNo ? { ...user, ...response.data } : user))
+          prevUsers.map((user) => (user.accountNo === accountNo ? response.data : user))
         );
-        return response.data;
       }
     } catch (error) {
       console.error('Error updating consumer:', error);

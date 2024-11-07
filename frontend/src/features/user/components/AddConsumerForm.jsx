@@ -11,13 +11,10 @@ import {
   Select,
   MenuItem,
   FormHelperText,
-  IconButton,
 } from '@mui/material';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import ErrorIcon from '@mui/icons-material/Error';
 
 const AddConsumerForm = ({ open, onClose, onAdd, refreshTable }) => {
   const [formData, setFormData] = useState({
@@ -34,11 +31,6 @@ const AddConsumerForm = ({ open, onClose, onAdd, refreshTable }) => {
   });
 
   const [formErrors, setFormErrors] = useState({});
-  const [fieldValidations, setFieldValidations] = useState({
-    accountNo: false,
-    email: false,
-    contact_number: false,
-  });
 
   useEffect(() => {
     if (open) {
@@ -63,11 +55,6 @@ const AddConsumerForm = ({ open, onClose, onAdd, refreshTable }) => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
-
-    // Validate fields dynamically
-    if (name === 'accountNo') validateAccountNo(value);
-    if (name === 'email') validateEmail(value);
-    if (name === 'contact_number') validateContactNumber(value);
   };
 
   const resetForm = () => {
@@ -84,29 +71,6 @@ const AddConsumerForm = ({ open, onClose, onAdd, refreshTable }) => {
       contact_number: '',
     });
     setFormErrors({});
-    setFieldValidations({
-      accountNo: false,
-      email: false,
-      contact_number: false,
-    });
-  };
-
-  const validateAccountNo = (value) => {
-    const isValid = /^\d{10}$/.test(value); // Check for 10 digits
-    setFieldValidations((prev) => ({ ...prev, accountNo: isValid }));
-    return isValid;
-  };
-
-  const validateEmail = (value) => {
-    const isValid = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value); // Simple email regex
-    setFieldValidations((prev) => ({ ...prev, email: isValid }));
-    return isValid;
-  };
-
-  const validateContactNumber = (value) => {
-    const isValid = /^\+94-\d{2}-\d{3}-\d{4}$/.test(value); // Match format +94-##-###-####
-    setFieldValidations((prev) => ({ ...prev, contact_number: isValid }));
-    return isValid;
   };
 
   const validateForm = () => {
@@ -133,6 +97,7 @@ const AddConsumerForm = ({ open, onClose, onAdd, refreshTable }) => {
 
     try {
       const response = await axios.post('http://localhost:8081/consumers/add', formData);
+
       if (response.status === 200 || response.status === 201) {
         onAdd(response.data);
         toast.success('Consumer added successfully!');
@@ -164,9 +129,6 @@ const AddConsumerForm = ({ open, onClose, onAdd, refreshTable }) => {
               helperText={formErrors.accountNo}
               value={formData.accountNo}
               onChange={handleInputChange}
-              InputProps={{
-                endAdornment: fieldValidations.accountNo ? <CheckCircleIcon sx={{ color: 'green' }} /> : <ErrorIcon sx={{ color: 'red' }} />,
-              }}
             />
             <TextField
               margin="dense"
@@ -200,9 +162,6 @@ const AddConsumerForm = ({ open, onClose, onAdd, refreshTable }) => {
               helperText={formErrors.email}
               value={formData.email}
               onChange={handleInputChange}
-              InputProps={{
-                endAdornment: fieldValidations.email ? <CheckCircleIcon sx={{ color: 'green' }} /> : <ErrorIcon sx={{ color: 'red' }} />,
-              }}
             />
             <TextField
               margin="dense"
@@ -264,22 +223,23 @@ const AddConsumerForm = ({ open, onClose, onAdd, refreshTable }) => {
               helperText={formErrors.contact_number}
               value={formData.contact_number}
               onChange={handleInputChange}
-              InputProps={{
-                endAdornment: fieldValidations.contact_number ? <CheckCircleIcon sx={{ color: 'green' }} /> : <ErrorIcon sx={{ color: 'red' }} />,
-              }}
             />
             <DialogActions>
-              <Button onClick={onClose} color="primary">
-                Cancel
-              </Button>
-              <Button type="submit" color="primary">
-                Add Consumer
-              </Button>
+              <Button onClick={onClose}>Cancel</Button>
+              <Button type="submit" color="primary">Add</Button>
             </DialogActions>
           </form>
         </DialogContent>
       </Dialog>
-      <ToastContainer />
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        draggable
+        pauseOnHover
+      />
     </>
   );
 };
