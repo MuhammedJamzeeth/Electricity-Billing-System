@@ -41,7 +41,7 @@ const SideBar = () => {
                 <Link to={'/home/user'} className="flex items-center pl-4">
                     <AccountBalanceIcon className="text-[#A3AED0]"/>
                     <div className="font-poppin pl-4 text-[#A3AED0] text-[14px] [line-height:30px] [letter-spacing:-0.32px]">
-                        Manage User
+                        Manage Consumer
                     </div>
                 </Link>
 

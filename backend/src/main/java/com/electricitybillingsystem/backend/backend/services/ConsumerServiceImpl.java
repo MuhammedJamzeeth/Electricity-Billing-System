@@ -26,7 +26,7 @@ public class ConsumerServiceImpl implements ConsumerService {
 
     @Override
     public List<Consumer> getAllConsumers() {
-        return consumerRepository.findAll(Sort.by("id"));
+        return consumerRepository.findAll();
     }
 
     @Override
