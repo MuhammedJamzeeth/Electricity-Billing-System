@@ -129,6 +129,7 @@ const AddConsumerForm = ({ open, onClose, onAdd, refreshTable }) => {
     try {
       const response = await axios.post('http://localhost:8081/consumers/add', formData);
       if (response.status === 200 || response.status === 201) {
+
         onAdd(response.data);
         toast.success('Consumer added successfully!');
         resetForm();

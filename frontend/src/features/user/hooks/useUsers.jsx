@@ -5,16 +5,27 @@ function useUsers() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const user = JSON.parse(localStorage.getItem('user'));
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get('http://localhost:8081/consumers/branch/2');
-        if (response.status === 200) {
-          setUsers(response.data);
-        } else {
-          console.error('Failed to fetch users:', response.statusText);
+        if (user.username.toLowerCase() !== "admin") {
+          const response = await axios.get(`http://localhost:8081/consumers/branch/${user.userID}`);
+          if (response.status === 200) {
+            setUsers(response.data);
+          } else {
+            console.error('Failed to fetch users:', response.statusText);
+          }
+        }else {
+          const response = await axios.get(`http://localhost:8081/consumers`);
+          if (response.status === 200) {
+            setUsers(response.data);
+          } else {
+            console.error('Failed to fetch users:', response.statusText);
+          }
         }
+
       } catch (error) {
         console.error('Error fetching users:', error);
         setError(error);
@@ -53,7 +64,7 @@ function useUsers() {
     try {
       const response = await axios.put(`http://localhost:8081/consumers/update/${accountNo}`, updatedData);
       if (response.status === 200) {
-        // Update the state to reflect the changes
+        console.log(updatedData);
         setUsers((prevUsers) =>
           prevUsers.map((user) =>
             user.accountNo === accountNo ? { ...user, ...updatedData } : user
