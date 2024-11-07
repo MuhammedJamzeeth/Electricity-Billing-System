@@ -33,6 +33,8 @@ CREATE TABLE branch (
                         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE INDEX idx_users_name ON branch(branch_username);
+
 DELIMITER //
 
 CREATE TRIGGER before_branch_insert
@@ -53,6 +55,27 @@ BEGIN
     SET existsFlag = (temp_count > 0);
 END //
 DELIMITER ;
+
+
+DELIMITER //
+
+CREATE PROCEDURE updateBranchUsername(IN id INT, IN new_branch_name VARCHAR(255), IN new_location VARCHAR(255))
+BEGIN
+    DECLARE new_username VARCHAR(255);
+
+    SET new_username = CONCAT(new_branch_name, '_', new_location);
+
+    UPDATE branch
+    SET branch_name = new_branch_name,
+        location = new_location,
+        branch_username = new_username
+    WHERE branch_Id = id;
+END //
+
+
+DELIMITER ;
+
+
 
 -- Fayas --------------------------------------------
 

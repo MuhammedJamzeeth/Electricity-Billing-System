@@ -1,5 +1,6 @@
 package com.electricitybillingsystem.backend.backend.services;
 
+import com.electricitybillingsystem.backend.backend.exceptions.NotFoundException;
 import com.electricitybillingsystem.backend.backend.models.Branch;
 import com.electricitybillingsystem.backend.backend.models.Consumer;
 import com.electricitybillingsystem.backend.backend.repositories.BranchRepository;
@@ -30,9 +31,9 @@ public class ConsumerServiceImpl implements ConsumerService {
     @Override
     public List<Consumer> getConsumersByBranchId(int branchId) {
         var branch = branchRepository.findById(branchId).orElseThrow(
-                () -> new ChangeSetPersister.NotFoundException("Branch not found")
+                () -> new NotFoundException("Branch not found")
         );
-        return consumerRepository.findByBranch(branchId, Sort.by("id"));
+        return consumerRepository.findConsumerByBranch(branch);
     }
 
     @Override

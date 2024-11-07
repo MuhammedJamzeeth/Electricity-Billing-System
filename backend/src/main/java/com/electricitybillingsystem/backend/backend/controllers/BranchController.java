@@ -2,6 +2,7 @@ package com.electricitybillingsystem.backend.backend.controllers;
 
 
 import com.electricitybillingsystem.backend.backend.dto.BranchAddRequestDto;
+import com.electricitybillingsystem.backend.backend.dto.BranchUpdateDto;
 import com.electricitybillingsystem.backend.backend.models.Branch;
 import com.electricitybillingsystem.backend.backend.services.BranchService;
 import jakarta.validation.Valid;
@@ -24,7 +25,7 @@ public class BranchController {
     }
 
     @GetMapping("/{branchId}")
-    public Branch getBranchById(@PathVariable Integer branchId) {
+    public BranchAddRequestDto getBranchById(@PathVariable Integer branchId) {
         return branchService.getBranchById(branchId);
     }
 
@@ -34,7 +35,7 @@ public class BranchController {
     }
 
     @PutMapping("/update/{branchId}")
-    public Branch updateBranch(@PathVariable Integer branchId, @RequestBody Branch branchDetails) {
+    public Branch updateBranch(@PathVariable Integer branchId, @RequestBody BranchUpdateDto branchDetails) {
         return branchService.updateBranch(branchId, branchDetails);
     }
 
@@ -42,4 +43,5 @@ public class BranchController {
     public void deleteBranch(@PathVariable Integer branchId) {
         branchService.deleteBranch(branchId);
     }
+
 }

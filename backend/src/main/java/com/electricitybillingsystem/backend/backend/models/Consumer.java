@@ -1,5 +1,6 @@
 package com.electricitybillingsystem.backend.backend.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +44,7 @@ public class Consumer {
     private String contact_number ;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "branch_id", referencedColumnName = "branch_id")
     private Branch branch;
 
