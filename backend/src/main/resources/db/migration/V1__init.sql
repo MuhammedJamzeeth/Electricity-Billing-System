@@ -48,6 +48,7 @@ CREATE TABLE IF NOT EXISTS payment (
     FOREIGN KEY (account_number) REFERENCES consumer(account_no)
 );
 
+-- trigger start
 DELIMITER //
 
 CREATE TRIGGER after_payment_insert
@@ -58,7 +59,8 @@ BEGIN
     SET total_bill = total_bill - NEW.amount
     WHERE account_no = NEW.account_number;
 END //
-
+-- trigger end
+-- view start
 DELIMITER ;
 
 CREATE VIEW payment_consumer_view AS
@@ -74,6 +76,21 @@ FROM
     payment p
         JOIN
     consumer c ON p.account_number = c.account_no;
+-- view end
+-- stored procedure start
+DELIMITER //
+
+CREATE PROCEDURE GetPaymentsByConsumer(IN search_term VARCHAR(255))
+BEGIN
+    -- Check if any payments exist for the given account number or full name
+    SELECT p.payment_id, p.receipt_number, p.amount, p.payment_date
+    FROM payment p
+             JOIN consumer c ON p.account_number = c.account_no
+    WHERE p.account_number = search_term OR CONCAT(c.first_name, ' ', c.last_name) = search_term;
+END //
+
+DELIMITER ;
+-- stored procedure end
 
 -- akthar
 CREATE TABLE IF NOT EXISTS EBill (
