@@ -9,7 +9,7 @@ function useUsers() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get('http://localhost:8081/consumers');
+        const response = await axios.get('http://localhost:8081/consumers/branch/2');
         if (response.status === 200) {
           setUsers(response.data);
         } else {
@@ -40,7 +40,9 @@ function useUsers() {
 
   const deleteUser = async (accountNo) => {
     try {
+      console.log(accountNo);
       const response = await axios.delete(`http://localhost:8081/consumers/delete/${accountNo}`);
+
       if (response.status === 200) {
         setUsers((prevUsers) => prevUsers.filter((user) => user.accountNo !== accountNo));
       }

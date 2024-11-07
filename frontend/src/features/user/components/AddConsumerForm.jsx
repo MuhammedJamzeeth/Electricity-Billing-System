@@ -31,6 +31,11 @@ const AddConsumerForm = ({ open, onClose, onAdd, refreshTable }) => {
   });
 
   const [formErrors, setFormErrors] = useState({});
+  const [isValid, setIsValid] = useState({
+    accountNo: false,
+    email: false,
+    contact_number: false,
+  });
 
   useEffect(() => {
     if (open) {
@@ -55,6 +60,15 @@ const AddConsumerForm = ({ open, onClose, onAdd, refreshTable }) => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
+
+    // Validate fields based on name
+    if (name === 'accountNo') {
+      validateAccountNo(value);
+    } else if (name === 'email') {
+      validateEmail(value);
+    } else if (name === 'contact_number') {
+      validateContactNumber(value);
+    }
   };
 
   const resetForm = () => {
@@ -71,6 +85,11 @@ const AddConsumerForm = ({ open, onClose, onAdd, refreshTable }) => {
       contact_number: '',
     });
     setFormErrors({});
+    setIsValid({
+      accountNo: false,
+      email: false,
+      contact_number: false,
+    });
   };
 
   const validateForm = () => {
@@ -87,6 +106,21 @@ const AddConsumerForm = ({ open, onClose, onAdd, refreshTable }) => {
     return errors;
   };
 
+  const validateAccountNo = (value) => {
+    const isValid = /^[0-9]{10}$/.test(value);
+    setIsValid((prev) => ({ ...prev, accountNo: isValid }));
+  };
+
+  const validateEmail = (value) => {
+    const isValid = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value);
+    setIsValid((prev) => ({ ...prev, email: isValid }));
+  };
+
+  const validateContactNumber = (value) => {
+    const isValid = /^\+94-\d{2}-\d{3}-\d{4}$/.test(value);
+    setIsValid((prev) => ({ ...prev, contact_number: isValid }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const errors = validateForm();
@@ -97,7 +131,6 @@ const AddConsumerForm = ({ open, onClose, onAdd, refreshTable }) => {
 
     try {
       const response = await axios.post('http://localhost:8081/consumers/add', formData);
-
       if (response.status === 200 || response.status === 201) {
         onAdd(response.data);
         toast.success('Consumer added successfully!');
@@ -125,10 +158,18 @@ const AddConsumerForm = ({ open, onClose, onAdd, refreshTable }) => {
               label="Account No"
               type="text"
               fullWidth
-              error={!!formErrors.accountNo}
-              helperText={formErrors.accountNo}
+              error={!!formErrors.accountNo || !isValid.accountNo}
+              helperText={formErrors.accountNo || (!isValid.accountNo && 'Account number must be 10 digits')}
               value={formData.accountNo}
               onChange={handleInputChange}
+              sx={{
+                '& .MuiInputBase-root': {
+                  borderColor: isValid.accountNo ? 'blue' : (formErrors.accountNo ? 'red' : ''),
+                },
+              }}
+              InputProps={{
+                endAdornment: isValid.accountNo && <span style={{ color: 'green' }}>✔</span>,
+              }}
             />
             <TextField
               margin="dense"
@@ -158,10 +199,18 @@ const AddConsumerForm = ({ open, onClose, onAdd, refreshTable }) => {
               label="Email"
               type="email"
               fullWidth
-              error={!!formErrors.email}
-              helperText={formErrors.email}
+              error={!!formErrors.email || !isValid.email}
+              helperText={formErrors.email || (!isValid.email && 'Enter a valid email')}
               value={formData.email}
               onChange={handleInputChange}
+              sx={{
+                '& .MuiInputBase-root': {
+                  borderColor: isValid.email ? 'blue' : (formErrors.email ? 'red' : ''),
+                },
+              }}
+              InputProps={{
+                endAdornment: isValid.email && <span style={{ color: 'green' }}>✔</span>,
+              }}
             />
             <TextField
               margin="dense"
@@ -208,8 +257,8 @@ const AddConsumerForm = ({ open, onClose, onAdd, refreshTable }) => {
                 <MenuItem value="">
                   <em>None</em>
                 </MenuItem>
-                <MenuItem value="1 Phase">1-Phase</MenuItem>
-                <MenuItem value="3 Phase">3-Phase</MenuItem>
+                <MenuItem value="1-Phase">1-Phase</MenuItem>
+                <MenuItem value="3-Phase">3-Phase</MenuItem>
               </Select>
               <FormHelperText>{formErrors.phase}</FormHelperText>
             </FormControl>
@@ -219,27 +268,31 @@ const AddConsumerForm = ({ open, onClose, onAdd, refreshTable }) => {
               label="Contact Number"
               type="text"
               fullWidth
-              error={!!formErrors.contact_number}
-              helperText={formErrors.contact_number}
+              error={!!formErrors.contact_number || !isValid.contact_number}
+              helperText={formErrors.contact_number || (!isValid.contact_number && 'Enter a valid contact number')}
               value={formData.contact_number}
               onChange={handleInputChange}
+              sx={{
+                '& .MuiInputBase-root': {
+                  borderColor: isValid.contact_number ? 'blue' : (formErrors.contact_number ? 'red' : ''),
+                },
+              }}
+              InputProps={{
+                endAdornment: isValid.contact_number && <span style={{ color: 'green' }}>✔</span>,
+              }}
             />
             <DialogActions>
-              <Button onClick={onClose}>Cancel</Button>
-              <Button type="submit" color="primary">Add</Button>
+              <Button onClick={onClose} color="primary">
+                Cancel
+              </Button>
+              <Button type="submit" color="primary">
+                Add Consumer
+              </Button>
             </DialogActions>
           </form>
         </DialogContent>
       </Dialog>
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        draggable
-        pauseOnHover
-      />
+      <ToastContainer />
     </>
   );
 };

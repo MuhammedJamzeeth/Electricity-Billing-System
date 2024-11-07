@@ -30,10 +30,8 @@ function UserTable({ searchTerm }) {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [consumerToDelete, setConsumerToDelete] = useState(null);
 
-  // Ensure users data is being set properly
   useEffect(() => {
     if (users) {
-      // Filter users based on the search term
       if (searchTerm) {
         setFilteredUsers(
           users.filter((user) =>
@@ -41,7 +39,7 @@ function UserTable({ searchTerm }) {
           )
         );
       } else {
-        setFilteredUsers(users); // Set all users if no search term
+        setFilteredUsers(users); 
       }
     }
   }, [users, searchTerm]);
@@ -53,7 +51,7 @@ function UserTable({ searchTerm }) {
 
   const handleDeleteConfirm = async () => {
     try {
-      await deleteUser(consumerToDelete.accountNo);
+      await deleteUser(consumerToDelete.accountNo); 
       toast.success('Consumer deleted successfully!');
       setOpenDeleteDialog(false);
       setConsumerToDelete(null);
@@ -97,8 +95,8 @@ function UserTable({ searchTerm }) {
 
   return (
     <div>
-      <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-        <TableContainer component={Paper} sx={{ maxHeight: '600px', overflowY: 'auto' }}>
+      <Paper sx={{ width: '100%', overflow: 'hidden', borderRadius: "20px" }}>
+        <TableContainer component={Paper} sx={{ maxHeight: '500px', overflowY: 'auto' }}>
           <Table stickyHeader>
             <TableHead>
               <TableRow>
@@ -115,10 +113,9 @@ function UserTable({ searchTerm }) {
               </TableRow>
             </TableHead>
             <TableBody>
-
-              {filteredUsers.map((user) => (
+              {filteredUsers.map((user, index) => (
                 <TableRow key={user.accountNo} hover>
-                  <TableCell align="center">{user.id}</TableCell>
+                  <TableCell align="center">{index + 1}</TableCell> {/* Display incremental ID */}
                   <TableCell align="center">{user.accountNo}</TableCell>
                   <TableCell align="center">{`${user.firstName} ${user.lastName}`}</TableCell>
                   <TableCell align="center">{user.email}</TableCell>
