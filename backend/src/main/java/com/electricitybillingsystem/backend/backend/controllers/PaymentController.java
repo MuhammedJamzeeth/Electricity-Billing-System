@@ -37,4 +37,10 @@ public class PaymentController {
         Payment createdPayment = paymentService.createPayment(payment);
         return new ResponseEntity<>(createdPayment, HttpStatus.CREATED);
     }
+
+    @GetMapping("/payments/search")
+    public ResponseEntity<List<PaymentConsumerView>> searchPayments(@RequestParam String searchTerm) {
+        List<PaymentConsumerView> payments = paymentService.searchPayments(searchTerm);
+        return ResponseEntity.ok(payments);
+    }
 }
