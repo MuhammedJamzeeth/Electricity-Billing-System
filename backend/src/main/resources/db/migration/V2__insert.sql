@@ -36,7 +36,7 @@ VALUES
 
 -- praveen --------------------------------------------
 
-INSERT INTO `electricity-billing-system`.`branch` (`branch_Id`, `branch_name`, `location`, `branch_username`, `contact_no`) VALUES ('2', 'Colombo CEB', 'Colombo - 11', 'CEB_colombo@gmail.com', '011-3454675');
+INSERT INTO `electricity-billing-system`.`branch` (`branch_Id`, `branch_name`, `location`, `branch_username`, `contact_no`) VALUES (2, 'Colombo CEB', 'Colombo - 11', 'CEB_colombo@gmail.com', '011-3454675');
 
 INSERT INTO employee (emp_Id, emp_Name, address, branch_Id, contact_No) VALUES
 (1001, 'Nimal Perera', '123 Galle Road, Colombo', 2, '0712345678'),

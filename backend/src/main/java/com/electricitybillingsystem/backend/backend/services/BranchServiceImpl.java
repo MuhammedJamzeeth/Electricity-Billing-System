@@ -1,6 +1,7 @@
 package com.electricitybillingsystem.backend.backend.services;
 
 import com.electricitybillingsystem.backend.backend.dto.BranchAddRequestDto;
+import com.electricitybillingsystem.backend.backend.exceptions.AlreadyExistsException;
 import com.electricitybillingsystem.backend.backend.models.Branch;
 import com.electricitybillingsystem.backend.backend.repositories.BranchRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,11 +30,20 @@ public class BranchServiceImpl implements BranchService {
 
     @Override
     public Branch createBranch(BranchAddRequestDto branchAddRequestDto) {
+
+        var isUsernameExits = branchRepository.checkUsernameExists(branchAddRequestDto.getBranchName());
+
+        if (Boolean.TRUE.equals(isUsernameExits)){
+            throw new AlreadyExistsException("Branch name already exits");
+        }
+
         Branch branch = new Branch();
+
         branch.setBranchName(branchAddRequestDto.getBranchName());
-        branch.setBranchUsername(branch.getBranchUsername());
-        branch.setPassword(passwordEncoder.encode(branch.getPassword()));
-        branch.setContactNo(branch.getContactNo());
+        branch.setPassword(passwordEncoder.encode(branchAddRequestDto.getPassword()));
+        branch.setLocation(branchAddRequestDto.getPassword());
+        branch.setContactNo(branchAddRequestDto.getContactNo());
+
         return branchRepository.save(branch);
     }
 

@@ -1,5 +1,6 @@
 package com.electricitybillingsystem.backend.backend.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -20,6 +21,7 @@ public class Employee {
     private String empName;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "branch_Id", nullable = false)
     private Branch branch;  // Assuming Branch is another entity mapped to branch table
 

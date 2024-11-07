@@ -2,10 +2,13 @@ package com.electricitybillingsystem.backend.backend.models;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @Table(name = "branch")
@@ -34,6 +37,10 @@ public class Branch {
 
     @Column(name = "password")
     private String password;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Employee> employees;
 
 
 }

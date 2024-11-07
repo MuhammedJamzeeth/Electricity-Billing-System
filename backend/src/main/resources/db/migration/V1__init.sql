@@ -33,6 +33,27 @@ CREATE TABLE branch (
                         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+DELIMITER //
+
+CREATE TRIGGER before_branch_insert
+    BEFORE INSERT ON branch
+    FOR EACH ROW
+BEGIN
+    SET NEW.branch_username = CONCAT(NEW.branch_name, '_', NEW.location);
+END //
+
+DELIMITER ;
+
+
+DELIMITER //
+CREATE PROCEDURE checkUsernameExists(IN username VARCHAR(255), OUT existsFlag BOOLEAN)
+BEGIN
+    DECLARE temp_count INT;
+    SELECT COUNT(*) INTO temp_count FROM branch WHERE branch_name = username;
+    SET existsFlag = (temp_count > 0);
+END //
+DELIMITER ;
+
 -- Fayas --------------------------------------------
 
 CREATE TABLE IF NOT EXISTS consumer (
