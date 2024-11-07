@@ -15,14 +15,11 @@ public class ExceptionResponseHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ResponseStatusException.class)
     public ResponseEntity<ExceptionResponseDto<String>> responseStatusExceptionHandler(final ResponseStatusException exception) {
-//        logException(exception);
+
         final var exceptionResponse = new ExceptionResponseDto<String>();
         exceptionResponse.setStatus(exception.getStatusCode().toString());
         exceptionResponse.setDescription(exception.getReason());
         return ResponseEntity.status(exception.getStatusCode()).body(exceptionResponse);
     }
 
-//    private void logException(final @NonNull Exception exception) {
-//        log.error("Exception encountered: {}", exception.getMessage());
-//    }
 }

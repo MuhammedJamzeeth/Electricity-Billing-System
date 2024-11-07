@@ -38,7 +38,6 @@ VALUES
 -- praveen --------------------------------------------
 
 
-
 INSERT INTO employee (emp_Id, emp_Name, address, branch_Id, contact_No) VALUES
 (1001, 'Nimal Perera', '123 Galle Road, Colombo', 2, '0712345678'),
 (1002, 'Sunil Fernando', '456 Kandy Road, Kandy', 2, '0723456789'),

@@ -2,6 +2,7 @@ package com.electricitybillingsystem.backend.backend.models;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,9 @@ public class Branch {
     @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Consumer> consumers;
 
+    @JsonManagedReference
+    @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Employee> employees;
 
 
 }
