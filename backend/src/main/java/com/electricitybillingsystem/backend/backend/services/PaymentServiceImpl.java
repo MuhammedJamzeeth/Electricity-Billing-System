@@ -58,4 +58,16 @@ public class PaymentServiceImpl implements PaymentService {
         return paymentConsumerViewRepository.findPaymentsByConsumerUsingStoredProcedure(searchTerm);
     }
 
+    //count
+    @Override
+    public long getPaymentCount() {
+        return paymentRepository.countPayment();
+    }
+
+    //graph
+    @Override
+    public List<Object[]> getMonthlyPayments() {
+        return paymentRepository.getMonthlyPayments();
+    }
+
 }

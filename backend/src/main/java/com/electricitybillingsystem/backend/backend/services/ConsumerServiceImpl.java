@@ -33,6 +33,7 @@ public class ConsumerServiceImpl implements ConsumerService {
         var branch = branchRepository.findById(branchId).orElseThrow(
                 () -> new NotFoundException("Branch not found")
         );
+        return consumerRepository.findConsumerByBranch(branch);
 
         return consumerRepository.findConsumerByBranch(branch);
 
@@ -78,6 +79,13 @@ public class ConsumerServiceImpl implements ConsumerService {
         }
     }
 
+
+
+    //consumer count dash
+    @Override
+    public long getConsumerCount() {
+        return consumerRepository.countConsumer();
+    }
 
 
 }

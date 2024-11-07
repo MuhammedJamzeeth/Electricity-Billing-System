@@ -3,11 +3,19 @@ import HomeIcon from '@mui/icons-material/Home';
 import EqualizerIcon from '@mui/icons-material/Equalizer';
 import PersonIcon from '@mui/icons-material/Person';
 import StickyNote2Icon from '@mui/icons-material/StickyNote2';
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 
 
 const SideBar = () => {
+    const user = JSON.parse(localStorage.getItem('user'))
+    const nav = useNavigate()
+
+    const handleClick = () => {
+        localStorage.removeItem('user')
+        nav("/")
+    }
+
     return (
         <div className="relative h-full flex w-[290px] bg-white flex-col">
             <div className="flex mt-[43px] pl-4 items-center">
@@ -37,12 +45,13 @@ const SideBar = () => {
                     </div>
                 </Link>
 
-                <Link to={'/home/branch'} className="flex items-center pl-4">
+                {user?.username === "admin" && <Link to={'/home/branch'} className="flex items-center pl-4">
                     <PersonIcon className="text-[#A3AED0]"/>
-                    <div className="font-poppin pl-4 text-[#A3AED0] text-[14px] [line-height:30px] [letter-spacing:-0.32px]">
+                    <div
+                        className="font-poppin pl-4 text-[#A3AED0] text-[14px] [line-height:30px] [letter-spacing:-0.32px]">
                         Manage Branch
                     </div>
-                </Link>
+                </Link>}
                 
                     <Link to={'/home/employee'} className="flex items-center pl-4">
                     <PersonIcon className="text-[#A3AED0]"/>
@@ -58,13 +67,13 @@ const SideBar = () => {
                     </div>
                 </div>
             </div>
-            <Link to={"/"} className="absolute w-full flex items-center justify-center bottom-0">
+            <div onClick={handleClick} className="absolute w-full flex items-center justify-center bottom-0">
                 <button style={{
                     background: "linear-gradient(135deg, #868CFF 0%, #4318FF 100%)",
                 }} className="w-[184px] rounded-[24px] [padding:6px_5px_5px_4px;] font-dm text-[16px] text-white font-medium">
                     logout
                 </button>
-            </Link>
+            </div>
         </div>
     );
 };

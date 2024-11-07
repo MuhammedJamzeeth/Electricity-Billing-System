@@ -69,17 +69,80 @@ const useBranchHandler = (data) => {
         }
     }
 
+    const getBranchById = async (id) => {
+
+        try{
+            const response = await axios.get(`http://localhost:8081/branch/${id}`)
+            console.log(response.data)
+            return response.data;
+
+        }catch (e) {
+            console.error(e)
+        }
+    }
+
     const getAllBranch = async () => {
         try{
             setLoading(true)
             const response = await axios.get('http://localhost:8081/branch');
             if (response.data){
                 setBranch(response.data)
+                console.log(response.data)
             }
         }catch (error){
             console.log(error)
         }finally {
             setLoading(false)
+        }
+    }
+
+    const updateBranch = async (id) => {
+
+        setError({})
+
+        let isError = false;
+
+        if (!data.branchName){
+            setError((prev) => ({
+                ...prev,
+                branchName: "Branch name required"
+            }))
+            isError = true
+        }
+        if (!data.location){
+            setError((prev) => ({
+                ...prev,
+                location: "Location required"
+            }))
+            isError = true
+        }
+        if(!data.contactNo){
+            setError((prev) => (
+                {
+                    ...prev,
+                    contactNo: "Contact Number Required"
+                }
+            ))
+            isError = true
+        }
+
+        if (isError){
+            return
+        }
+        try{
+
+            const response = await axios.put(`http://localhost:8081/branch/update/${id}`,
+                data
+            )
+            console.log(response)
+            if(response.status === 200){
+                nav("/home/branch")
+            }
+
+            return response
+
+        }catch (e){
+            console.log(e)
         }
     }
 
@@ -99,13 +162,15 @@ const useBranchHandler = (data) => {
     }
 
     return {
+        getBranchById,
         error,
         deleteRes,
         deleteBranch,
         addNewBranch,
         branch,
         getAllBranch,
-        loading
+        loading,
+        updateBranch
     }
 };
 

@@ -3,6 +3,7 @@ import {usePage} from "../../../contexts/PageContext.jsx";
 const Header = () => {
 
     const  { pageName } = usePage();
+    const user = JSON.parse(localStorage.getItem('user'))
 
     return (
         <div className="flex items-center pt-[32px] px-[32px] justify-between w-full">
@@ -14,10 +15,9 @@ const Header = () => {
                     {pageName ? pageName.split("/").filter(Boolean).pop() : "Manage User"}
                 </div>
                 <div className="text-[20px] capitalize text-[#05CD99] font-bold">
-                    {pageName || "Manage User"}
+                    {user?.username || "Manage User"}
                 </div>
             </div>
-            Head me
         </div>
     );
 };

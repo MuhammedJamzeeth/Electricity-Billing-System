@@ -1,13 +1,13 @@
 import {useState} from "react";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
+import {data} from "autoprefixer";
 
 const useAuthHandler = (values) => {
     const [error, setError] = useState({})
     const nav = useNavigate();
 
     const handleLogin = async () => {
-        console.log(values);
         let isError = false;
         setError({});
         // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -32,8 +32,9 @@ const useAuthHandler = (values) => {
 
         try {
             const response = await axios.post('http://localhost:8081/auth/login', values);
-            console.log(response);
+            console.log(response.data);
             if (response.status === 200) {
+                localStorage.setItem('user', JSON.stringify(response.data))
                 nav('/home');
             }
         } catch (error) {

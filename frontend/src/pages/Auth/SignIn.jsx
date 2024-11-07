@@ -1,8 +1,9 @@
 import {Box, Button, Checkbox, FormControl, InputLabel, MenuItem, TextField, Typography} from "@mui/material";
 import Select from '@mui/material/Select';
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {handleInputChange} from "../../hooks/handleInputChange.js";
 import useAuthHandler from "../../hooks/useAuthHandler.js";
+import useBranchHandler from "../../hooks/useBranchHandler.js";
 
 const SignInState = {
     username: "",
@@ -14,6 +15,12 @@ const SignIn = () => {
     const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
     const [inputValues, setInputValues] = useState(SignInState)
     const {error, handleLogin} = useAuthHandler(inputValues);
+
+    const {branch,getAllBranch} = useBranchHandler()
+
+    useEffect(() => {
+        getAllBranch().then()
+    }, []);
 
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -57,6 +64,10 @@ const SignIn = () => {
                                 onChange={(e) => handleInputChange(e, setInputValues)}
                             >
                                 <MenuItem value={"admin"}>Admin</MenuItem>
+
+                                {branch?.map((item) => (
+                                    <MenuItem value={item.location}>{item.location}</MenuItem>
+                                ))}
 
                             </Select>
                             {error.branch && <Typography sx={{

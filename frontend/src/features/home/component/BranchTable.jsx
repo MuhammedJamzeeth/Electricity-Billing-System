@@ -53,7 +53,7 @@ const BranchTable = () => {
                                     <TableCell align="center">{item.location}</TableCell>
                                     <TableCell align="center">{item.contactNo}</TableCell>
                                     <TableCell align="center">
-                                        <Button>
+                                        <Button onClick={() => nav(`/home/edit-branch/${item.branchId}`)}>
                                             <EditIcon />
                                         </Button>
                                         <Button onClick={() => deleteBranch(item.branchId)} sx={{ color: 'red' }}>
