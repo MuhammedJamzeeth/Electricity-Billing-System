@@ -47,4 +47,14 @@ public class PaymentServiceImpl implements PaymentService {
     public List<PaymentConsumerView> getPaymentDetailsFromView() {
         return paymentConsumerViewRepository.findAll();
     }
+
+    @Override
+    public List<PaymentConsumerView> searchPayments(String searchTerm) {
+        if (searchTerm.matches("\\d+")) {
+            return paymentConsumerViewRepository.findByAccountNumber(Long.valueOf(searchTerm));
+        } else {
+            return paymentConsumerViewRepository.findByFullName(searchTerm);
+        }
+    }
+
 }
