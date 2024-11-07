@@ -54,6 +54,7 @@ const AddPaymentBtn = () => {
         }
     };
 
+
     const handleConfirmSubmit = async () => {
         const { accountNumber, receiptNumber, amount, paymentDate } = formData;
         setShowConfirmation(false);

@@ -22,7 +22,7 @@ public class Payment {
     private Integer paymentId;
 
     @ManyToOne
-    @JsonBackReference
+//    @JsonBackReference
     @JoinColumn(name = "account_number", nullable = false)
     private Consumer consumer;
 

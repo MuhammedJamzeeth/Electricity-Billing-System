@@ -35,8 +35,6 @@ public class ConsumerServiceImpl implements ConsumerService {
         );
         return consumerRepository.findConsumerByBranch(branch);
 
-        return consumerRepository.findConsumerByBranch(branch);
-
     }
 
     @Override
