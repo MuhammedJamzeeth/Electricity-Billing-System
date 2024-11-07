@@ -60,21 +60,16 @@ function useUsers() {
     }
   };
 
-  const updateUser = async (accountNo, updatedData) => {
+  const updateUser = async (accountNo, updatedConsumer) => {
     try {
-      const response = await axios.put(`http://localhost:8081/consumers/update/${accountNo}`, updatedData);
-      if (response.status === 200) {
-        console.log(updatedData);
-        setUsers((prevUsers) =>
-          prevUsers.map((user) =>
-            user.accountNo === accountNo ? { ...user, ...updatedData } : user
-          )
-        );
-      }
+      const response = await axios.put(`http://localhost:8081/consumers/update/${accountNo}`, updatedConsumer);
+      return response;
     } catch (error) {
-      console.error('Error updating consumer:', error);
+      console.error("Error updating consumer:", error);
+      throw error;
     }
   };
+  
 
   return { users, loading, error, addConsumer, deleteUser, updateUser };
 }

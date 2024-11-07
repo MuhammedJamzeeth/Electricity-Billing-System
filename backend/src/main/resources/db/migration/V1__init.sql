@@ -80,7 +80,6 @@ DELIMITER ;
 -- Fayas --------------------------------------------
 
 CREATE TABLE IF NOT EXISTS consumer (
-    id INT NOT NULL,
     account_no BIGINT PRIMARY KEY,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
@@ -91,11 +90,11 @@ CREATE TABLE IF NOT EXISTS consumer (
     phase VARCHAR(15) NOT NULL,
     contact_number VARCHAR(15) NOT NULL,
     branch_id INT NOT NULL,
-    FOREIGN KEY (branch_id) REFERENCES branch (branch_Id),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    FOREIGN KEY (branch_id) REFERENCES branch (branch_Id)
+
     );
 
-CREATE INDEX idx_consumer_id ON consumer(id);
+
 
 -- Siyam --------------------------------------------
 

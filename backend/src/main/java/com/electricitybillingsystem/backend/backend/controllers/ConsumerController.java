@@ -1,5 +1,6 @@
 package com.electricitybillingsystem.backend.backend.controllers;
 
+import com.electricitybillingsystem.backend.backend.dto.AddConsumerRequest;
 import com.electricitybillingsystem.backend.backend.models.Consumer;
 import com.electricitybillingsystem.backend.backend.services.ConsumerService;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ public class ConsumerController {
     }
 
     @PostMapping("/consumers/add")
-    public Consumer createConsumer(@RequestBody Consumer consumer) {
+    public Consumer createConsumer(@RequestBody AddConsumerRequest consumer) {
         return consumerService.createConsumer(consumer);
     }
 

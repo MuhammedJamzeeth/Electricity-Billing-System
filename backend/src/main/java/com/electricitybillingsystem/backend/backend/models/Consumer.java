@@ -16,7 +16,6 @@ import java.util.List;
 @Setter
 public class Consumer {
 
-    private  Integer id;
 
     @Id
     private Long accountNo;

@@ -17,8 +17,13 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const AddConsumerForm = ({ open, onClose, onAdd, refreshTable }) => {
+  const user = JSON.parse(localStorage.getItem('user'));
+
+  const generateAccountNumber = () => {
+    return '765' + Math.floor(1000000 + Math.random() * 9000000);
+  };
+
   const [formData, setFormData] = useState({
-    id: '',
     accountNo: '',
     firstName: '',
     lastName: '',
@@ -28,6 +33,7 @@ const AddConsumerForm = ({ open, onClose, onAdd, refreshTable }) => {
     address: '',
     phase: '',
     contact_number: '',
+    branchId: user.userID,
   });
 
   const [formErrors, setFormErrors] = useState({});
@@ -37,43 +43,25 @@ const AddConsumerForm = ({ open, onClose, onAdd, refreshTable }) => {
     contact_number: true,
   });
 
+ 
   useEffect(() => {
     if (open) {
-      fetchNextConsumerId();
       resetForm();
     }
   }, [open]);
-
-  const fetchNextConsumerId = async () => {
-    try {
-      const response = await axios.get('http://localhost:8081/consumers');
-      if (response.status === 200 && Array.isArray(response.data)) {
-        const nextId = response.data.length + 1;
-        setFormData((prevData) => ({ ...prevData, id: nextId }));
-      }
-    } catch (error) {
-      console.error('Error fetching consumer ID:', error);
-      toast.error('Failed to fetch consumer ID. Please try again.');
-    }
-  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
 
-    if (name === 'accountNo') {
-      validateAccountNo(value);
-    } else if (name === 'email') {
-      validateEmail(value);
-    } else if (name === 'contact_number') {
-      validateContactNumber(value);
-    }
+    if (name === 'accountNo') validateAccountNo(value);
+    else if (name === 'email') validateEmail(value);
+    else if (name === 'contact_number') validateContactNumber(value);
   };
 
   const resetForm = () => {
     setFormData({
-      id: '',
-      accountNo: '',
+      accountNo: generateAccountNumber(), 
       firstName: '',
       lastName: '',
       email: '',
@@ -82,6 +70,7 @@ const AddConsumerForm = ({ open, onClose, onAdd, refreshTable }) => {
       address: '',
       phase: '',
       contact_number: '',
+      branchId: user.userID || '',
     });
     setFormErrors({});
     setIsValid({
@@ -91,17 +80,34 @@ const AddConsumerForm = ({ open, onClose, onAdd, refreshTable }) => {
     });
   };
 
-  const validateAccountNo = (value) => {
+  const validateAccountNo = async (value) => {
+  
     const isValidAccount = /^[0-9]{10}$/.test(value);
     setIsValid((prev) => ({ ...prev, accountNo: isValidAccount }));
     setFormErrors((prevErrors) => ({
       ...prevErrors,
       accountNo: isValidAccount ? '' : 'Account number must be 10 digits',
     }));
+
+    if (isValidAccount) {
+      
+      try {
+        const response = await axios.get(`http://localhost:8081/consumers/check-account/${value}`);
+        if (!response.data.isUnique) {
+          setIsValid((prev) => ({ ...prev, accountNo: false }));
+          setFormErrors((prevErrors) => ({
+            ...prevErrors,
+            accountNo: 'Account number already exists',
+          }));
+        }
+      } catch (error) {
+        console.error('Error checking account number uniqueness:', error);
+      }
+    }
   };
 
   const validateEmail = (value) => {
-    const isValidEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value);
+    const isValidEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA0-9]{2,}$/.test(value);
     setIsValid((prev) => ({ ...prev, email: isValidEmail }));
     setFormErrors((prevErrors) => ({
       ...prevErrors,
@@ -110,12 +116,25 @@ const AddConsumerForm = ({ open, onClose, onAdd, refreshTable }) => {
   };
 
   const validateContactNumber = (value) => {
-    const isValidContact = /^\+94-\d{2}-\d{3}-\d{4}$/.test(value);
+    const isValidContact = /^07\d{8}$/.test(value); 
     setIsValid((prev) => ({ ...prev, contact_number: isValidContact }));
     setFormErrors((prevErrors) => ({
       ...prevErrors,
-      contact_number: isValidContact ? '' : 'Format: +94-xx-xxx-xxxx',
+      contact_number: isValidContact ? '' : 'Contact number must start with 070 and be 10 digits',
     }));
+  };
+
+  const validateForm = () => {
+    const errors = {};
+    if (!formData.accountNo) errors.accountNo = 'Account number is required';
+    if (!formData.firstName) errors.firstName = 'First name is required';
+    if (!formData.lastName) errors.lastName = 'Last name is required';
+    if (!formData.email) errors.email = 'Email is required';
+    if (!formData.meterNo) errors.meterNo = 'Meter number is required';
+    if (!formData.address) errors.address = 'Address is required';
+    if (!formData.phase) errors.phase = 'Phase selection is required';
+    if (!formData.contact_number) errors.contact_number = 'Contact number is required';
+    return errors;
   };
 
   const handleSubmit = async (e) => {
@@ -129,7 +148,6 @@ const AddConsumerForm = ({ open, onClose, onAdd, refreshTable }) => {
     try {
       const response = await axios.post('http://localhost:8081/consumers/add', formData);
       if (response.status === 200 || response.status === 201) {
-
         onAdd(response.data);
         toast.success('Consumer added successfully!');
         resetForm();
@@ -140,7 +158,6 @@ const AddConsumerForm = ({ open, onClose, onAdd, refreshTable }) => {
       }
     } catch (error) {
       console.error('Error submitting form:', error);
-      toast.error('Failed to add consumer. Please try again.');
     }
   };
 
@@ -160,7 +177,8 @@ const AddConsumerForm = ({ open, onClose, onAdd, refreshTable }) => {
               helperText={formErrors.accountNo}
               value={formData.accountNo}
               onChange={handleInputChange}
-              placeholder="Enter a 10-digit account number"
+              placeholder="Account number is auto-generated"
+              disabled 
             />
             <TextField
               margin="dense"
@@ -253,21 +271,21 @@ const AddConsumerForm = ({ open, onClose, onAdd, refreshTable }) => {
             <TextField
               margin="dense"
               name="contact_number"
-              label="Contact Number"
+              label="Contact No"
               type="text"
               fullWidth
               error={!isValid.contact_number}
               helperText={formErrors.contact_number}
               value={formData.contact_number}
               onChange={handleInputChange}
-              placeholder="Enter contact number (e.g., +94-xx-xxx-xxxx)"
+              placeholder="Enter contact number"
             />
-            <DialogActions>
-              <Button color="secondary"   className=' hover:bg-purple-300'  onClick={onClose} >Cancel</Button>
-              <Button className=' hover:bg-blue-300  ' type="submit" color="primary">Add Consumer</Button>
-            </DialogActions>
           </form>
         </DialogContent>
+        <DialogActions>
+          <Button onClick={onClose} color="primary">Cancel</Button>
+          <Button onClick={handleSubmit} color="primary">Add</Button>
+        </DialogActions>
       </Dialog>
       <ToastContainer />
     </>

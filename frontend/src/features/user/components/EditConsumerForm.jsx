@@ -41,7 +41,7 @@ function EditConsumerForm({ consumer, onCancel }) {
         meterNo: consumer.meterNo || '',
         joinDate: consumer.joinDate || '',
         phase: consumer.phase || '1-Phase',
-        branch: user.userID || ''
+        branch: user.userID || ''  // This is read-only, will not be updated
       });
     }
   }, [consumer]);
@@ -52,7 +52,7 @@ function EditConsumerForm({ consumer, onCancel }) {
   };
 
   const validateForm = () => {
-    const requiredFields = ['firstName', 'lastName', 'email', 'contact_number', 'address', 'meterNo', 'branch'];
+    const requiredFields = ['firstName', 'lastName', 'email', 'contact_number', 'address', 'branch'];
     for (const field of requiredFields) {
       if (!formData[field]) {
         toast.error(`Please fill out the ${field.replace('_', ' ')} field.`);
@@ -67,11 +67,21 @@ function EditConsumerForm({ consumer, onCancel }) {
 
     try {
       const updatedConsumer = {
-        ...formData  // This includes firstName, lastName, email, contact_number, address, meterNo, joinDate, phase, and branch
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        contact_number: formData.contact_number,
+        address: formData.address,
+        meterNo: formData.meterNo, // meterNo is sent as it is (read-only)
+        joinDate: formData.joinDate,
+        phase: formData.phase,
+        branch: formData.branch, // branch is sent as it is (read-only)
       };
-  
+
+      console.log("Data being sent to server:", updatedConsumer);
+
       const response = await updateUser(consumer.accountNo, updatedConsumer);
-      
+
       if (response && (response.status === 200 || response.status === 201 || response === true)) {
         toast.success('Consumer details updated successfully!');
         onCancel();
@@ -135,12 +145,16 @@ function EditConsumerForm({ consumer, onCancel }) {
             />
           </Grid>
           <Grid item xs={12}>
+            {/* Make Meter No read-only */}
             <TextField
               label="Meter No"
               name="meterNo"
               value={formData.meterNo}
               onChange={handleChange}
               fullWidth
+              InputProps={{
+                readOnly: true,  // Disable the input
+              }}
             />
           </Grid>
           <Grid item xs={12}>
@@ -157,12 +171,16 @@ function EditConsumerForm({ consumer, onCancel }) {
             </FormControl>
           </Grid>
           <Grid item xs={12}>
+            {/* Make Branch read-only */}
             <TextField
               label="Branch"
               name="branch"
               value={formData.branch}
               onChange={handleChange}
               fullWidth
+              InputProps={{
+                readOnly: true,  // Disable the input
+              }}
             />
           </Grid>
         </Grid>
