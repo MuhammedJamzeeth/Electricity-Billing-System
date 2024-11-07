@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 import React, { useState } from 'react';
 import axios from 'axios';
 
@@ -28,6 +29,7 @@ const PaymentSearch = () => {
             } else {
                 setPayments(response.data);
             }
+            // eslint-disable-next-line no-unused-vars
         } catch (error) {
             setErrorMessage('Error fetching data, please try again later.');
             setPayments([]);

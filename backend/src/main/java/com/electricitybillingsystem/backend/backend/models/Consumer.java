@@ -51,9 +51,9 @@ public class Consumer {
     private Branch branch;
 
     //added by siyam
-    @JsonManagedReference
-    @OneToMany(mappedBy = "consumer", cascade = CascadeType.ALL,orphanRemoval = true)
-    private List<Payment> payments;
+//    @JsonManagedReference
+//    @OneToMany(mappedBy = "consumer", cascade = CascadeType.ALL,orphanRemoval = true)
+//    private List<Payment> payments;
 
     //added by siyam
     @JsonManagedReference
