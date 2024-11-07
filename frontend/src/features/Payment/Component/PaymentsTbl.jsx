@@ -26,8 +26,8 @@ const PaymentsTbl = () => {
     if (error) return <div>Error: {error}</div>;
 
     return (
-        <div className="p-6 bg-gray-50 rounded-lg shadow-lg">
-            <h2 className="text-2xl font-semibold mb-6 text-left text-gray-700">Payment Details</h2>
+        <div className="p-4 bg-gray-50 rounded-lg shadow-lg">
+            <h2 className="text-2xl font-semibold mb-4 text-left text-gray-700">Payment Details</h2>
             <div className="overflow-x-auto">
                 <div className="max-h-80 overflow-y-auto rounded-lg">
                     <table className="w-full text-left border-collapse bg-white">
