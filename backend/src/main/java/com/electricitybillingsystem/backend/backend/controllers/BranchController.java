@@ -44,4 +44,9 @@ public class BranchController {
         branchService.deleteBranch(branchId);
     }
 
+    //branch count dashboard
+    @GetMapping("/branch/count")
+    public long getBranchCount() {
+        return branchService.getBranchCount();
+    }
 }

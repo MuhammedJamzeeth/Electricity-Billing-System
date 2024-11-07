@@ -39,8 +39,22 @@ public class PaymentController {
     }
 
     @GetMapping("/payments/search")
-    public ResponseEntity<List<PaymentConsumerView>> searchPayments(@RequestParam String searchTerm) {
-        List<PaymentConsumerView> payments = paymentService.searchPayments(searchTerm);
+    public ResponseEntity<List<PaymentConsumerView>> findPaymentsByConsumer(@RequestParam String searchTerm) {
+        List<PaymentConsumerView> payments = paymentService.findPaymentsByConsumer(searchTerm);
         return ResponseEntity.ok(payments);
     }
+
+    //count for dash
+    @GetMapping("/payment/count")
+    public long getPaymentCount() {
+        return paymentService.getPaymentCount();
+    }
+
+    //graph
+    @GetMapping("/payment/monthly")
+    public ResponseEntity<List<Object[]>> getMonthlyPayments() {
+        List<Object[]> monthlyPayments = paymentService.getMonthlyPayments();
+        return ResponseEntity.ok(monthlyPayments);
+    }
 }
+

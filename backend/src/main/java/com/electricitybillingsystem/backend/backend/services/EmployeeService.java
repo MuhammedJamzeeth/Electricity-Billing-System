@@ -9,4 +9,8 @@ public interface EmployeeService {
     Employee createEmployee(Employee employee);
     Employee updateEmployee(Integer empId, Employee employeeDetails);
     void deleteEmployee(Integer empId);
+
+    //employee count in dashboard
+    long getEmployeeCount();
+
 }

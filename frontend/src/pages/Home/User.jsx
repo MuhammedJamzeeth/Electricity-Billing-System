@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, TextField, InputAdornment, IconButton, CircularProgress, Typography } from '@mui/material';
+import { Button, TextField, InputAdornment, IconButton, CircularProgress, Typography, Grid, Box } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import axios from 'axios';
 import UserTable from '../../features/user/components/UserTable.jsx';
@@ -44,28 +44,34 @@ function User() {
 
   return (
     <div className="mt-4">
-     
+      <Grid container spacing={2} alignItems="flex-end">
+        {/* Search Box */}
+        <Grid item xs={8} sm={4}>
+          <TextField
+            placeholder="Search by Account No."
+            variant="outlined"
+            size="small"
+            value={searchTerm}
+            onChange={handleSearchChange}
+            fullWidth
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton onClick={handleSearch}>
+                    <SearchIcon />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Grid>
 
-      <div className="p-4 bg-gray-50 rounded-lg shadow-lg flex justify-end mb-4 spa">
-      <div style={{ marginBottom: '16px'}}>
-        <TextField
-          placeholder="Search by Account No."
-          variant="outlined"
-          size="small"
-          value={searchTerm}
-          onChange={handleSearchChange}
-          fullWidth
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton onClick={handleSearch}>
-                  <SearchIcon />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        />
-      </div>
+        <Grid item xs={4} sm={7.5} textAlign="end">
+          <Button variant="contained" color="primary" onClick={handleOpenForm}>
+            Add User
+          </Button>
+        </Grid>
+      </Grid>
 
       {loading && <CircularProgress />}
 
@@ -75,12 +81,10 @@ function User() {
           <pre>{JSON.stringify(consumerData, null, 2)}</pre>
         </div>
       ) : null}
-        <Button variant="contained" color="primary" onClick={handleOpenForm}>
-          Add User
-        </Button>
-      </div>
 
-      <UserTable searchTerm={searchTerm} />
+      <Box mt={3}>
+        <UserTable searchTerm={searchTerm} />
+      </Box>
 
       <AddConsumerForm open={formOpen} onClose={handleCloseForm} onAdd={handleAddConsumer} />
     </div>

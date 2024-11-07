@@ -2,6 +2,7 @@ package com.electricitybillingsystem.backend.backend.repositories;
 
 import com.electricitybillingsystem.backend.backend.models.Branch;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
 
@@ -17,4 +18,9 @@ public interface BranchRepository extends JpaRepository<Branch, Integer> {
 
     @Procedure(name = "updateBranchUsername")
     void updateBranchUsername(@Param("branch_id") Integer branchId, @Param("new_branch_name") String newBranchName, @Param("new_location") String newLocation);
+
+    //branch count dashboard
+    @Query(value = "SELECT COUNT(*) FROM branch", nativeQuery = true)
+    long countBranch();
+
 }

@@ -16,5 +16,10 @@ public interface ConsumerService {
     Consumer updateConsumer(Long accountNo, Consumer consumer);
     void deleteConsumer(Long accountNo);
 
+
     Consumer searchConsumerByAccountNo(Long accountNo);
+
+    //count for dashboard
+    long getConsumerCount();
+
 }

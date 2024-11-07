@@ -31,15 +31,16 @@ function UserTable({ searchTerm }) {
   const [consumerToDelete, setConsumerToDelete] = useState(null);
 
   useEffect(() => {
-    // Filter users based on the search term passed as a prop
-    if (searchTerm) {
-      setFilteredUsers(
-        users.filter((user) =>
-          user.accountNo.toString().toLowerCase().includes(searchTerm.toLowerCase())
-        )
-      );
-    } else {
-      setFilteredUsers(users);
+    if (users) {
+      if (searchTerm) {
+        setFilteredUsers(
+          users.filter((user) =>
+            user.accountNo.toString().toLowerCase().includes(searchTerm.toLowerCase())
+          )
+        );
+      } else {
+        setFilteredUsers(users); 
+      }
     }
   }, [users, searchTerm]);
 
@@ -50,7 +51,7 @@ function UserTable({ searchTerm }) {
 
   const handleDeleteConfirm = async () => {
     try {
-      await deleteUser(consumerToDelete.accountNo);
+      await deleteUser(consumerToDelete.accountNo); 
       toast.success('Consumer deleted successfully!');
       setOpenDeleteDialog(false);
       setConsumerToDelete(null);
@@ -94,11 +95,11 @@ function UserTable({ searchTerm }) {
 
   return (
     <div>
-      <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-        <TableContainer component={Paper} sx={{ maxHeight: '600px', overflowY: 'auto' }}>
+      <Paper sx={{ width: '100%', overflow: 'hidden', borderRadius: "20px" }}>
+        <TableContainer component={Paper} sx={{ maxHeight: '500px', overflowY: 'auto' }}>
           <Table stickyHeader>
             <TableHead>
-              <TableRow sx={{ backgroundColor: 'blue' }}>
+              <TableRow>
                 <TableCell align="center">Id</TableCell>
                 <TableCell align="center">Account No</TableCell>
                 <TableCell align="center">Full Name</TableCell>
@@ -112,9 +113,9 @@ function UserTable({ searchTerm }) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {filteredUsers.map((user) => (
+              {filteredUsers.map((user, index) => (
                 <TableRow key={user.accountNo} hover>
-                  <TableCell align="center">{user.id}</TableCell>
+                  <TableCell align="center">{index + 1}</TableCell> {/* Display incremental ID */}
                   <TableCell align="center">{user.accountNo}</TableCell>
                   <TableCell align="center">{`${user.firstName} ${user.lastName}`}</TableCell>
                   <TableCell align="center">{user.email}</TableCell>
@@ -140,17 +141,9 @@ function UserTable({ searchTerm }) {
         </TableContainer>
       </Paper>
 
-      {/* Edit Consumer Form Dialog */}
-      <EditConsumerForm
-        consumer={selectedConsumer}
-        onCancel={handleCloseEditDialog}
-      />
+      <EditConsumerForm consumer={selectedConsumer} onCancel={handleCloseEditDialog} />
 
-      {/* Delete Confirmation Dialog */}
-      <Dialog
-        open={openDeleteDialog}
-        onClose={handleDeleteCancel}
-      >
+      <Dialog open={openDeleteDialog} onClose={handleDeleteCancel}>
         <DialogTitle>Confirm Deletion</DialogTitle>
         <DialogContent>
           <Typography>Are you sure you want to delete this consumer?</Typography>

@@ -1,5 +1,6 @@
 package com.electricitybillingsystem.backend.backend.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ public class Payment {
     private Integer paymentId;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "account_number", nullable = false)
     private Consumer consumer;
 
@@ -32,4 +34,6 @@ public class Payment {
 
     @Column(name="payment_date", nullable = false)
     private Date paymentDate;
+
+
 }

@@ -42,4 +42,10 @@ public class EmployeeServiceImpl implements EmployeeService {
     public void deleteEmployee(Integer emp_Id) {
         employeeRepository.deleteById(emp_Id);
     }
+
+    //employee count in dashboard
+    @Override
+    public long getEmployeeCount() {
+        return employeeRepository.countEmployees();
+    }
 }

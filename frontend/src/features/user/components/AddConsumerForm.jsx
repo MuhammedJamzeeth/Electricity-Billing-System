@@ -11,13 +11,10 @@ import {
   Select,
   MenuItem,
   FormHelperText,
-  IconButton,
 } from '@mui/material';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import ErrorIcon from '@mui/icons-material/Error';
 
 const AddConsumerForm = ({ open, onClose, onAdd, refreshTable }) => {
   const [formData, setFormData] = useState({
@@ -34,7 +31,7 @@ const AddConsumerForm = ({ open, onClose, onAdd, refreshTable }) => {
   });
 
   const [formErrors, setFormErrors] = useState({});
-  const [fieldValidations, setFieldValidations] = useState({
+  const [isValid, setIsValid] = useState({
     accountNo: false,
     email: false,
     contact_number: false,
@@ -64,10 +61,14 @@ const AddConsumerForm = ({ open, onClose, onAdd, refreshTable }) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
 
-    // Validate fields dynamically
-    if (name === 'accountNo') validateAccountNo(value);
-    if (name === 'email') validateEmail(value);
-    if (name === 'contact_number') validateContactNumber(value);
+    // Validate fields based on name
+    if (name === 'accountNo') {
+      validateAccountNo(value);
+    } else if (name === 'email') {
+      validateEmail(value);
+    } else if (name === 'contact_number') {
+      validateContactNumber(value);
+    }
   };
 
   const resetForm = () => {
@@ -84,29 +85,11 @@ const AddConsumerForm = ({ open, onClose, onAdd, refreshTable }) => {
       contact_number: '',
     });
     setFormErrors({});
-    setFieldValidations({
+    setIsValid({
       accountNo: false,
       email: false,
       contact_number: false,
     });
-  };
-
-  const validateAccountNo = (value) => {
-    const isValid = /^\d{10}$/.test(value); // Check for 10 digits
-    setFieldValidations((prev) => ({ ...prev, accountNo: isValid }));
-    return isValid;
-  };
-
-  const validateEmail = (value) => {
-    const isValid = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value); // Simple email regex
-    setFieldValidations((prev) => ({ ...prev, email: isValid }));
-    return isValid;
-  };
-
-  const validateContactNumber = (value) => {
-    const isValid = /^\+94-\d{2}-\d{3}-\d{4}$/.test(value); // Match format +94-##-###-####
-    setFieldValidations((prev) => ({ ...prev, contact_number: isValid }));
-    return isValid;
   };
 
   const validateForm = () => {
@@ -121,6 +104,21 @@ const AddConsumerForm = ({ open, onClose, onAdd, refreshTable }) => {
     if (!formData.phase) errors.phase = 'Phase is required.';
     if (!formData.contact_number) errors.contact_number = 'Contact number is required.';
     return errors;
+  };
+
+  const validateAccountNo = (value) => {
+    const isValid = /^[0-9]{10}$/.test(value);
+    setIsValid((prev) => ({ ...prev, accountNo: isValid }));
+  };
+
+  const validateEmail = (value) => {
+    const isValid = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value);
+    setIsValid((prev) => ({ ...prev, email: isValid }));
+  };
+
+  const validateContactNumber = (value) => {
+    const isValid = /^\+94-\d{2}-\d{3}-\d{4}$/.test(value);
+    setIsValid((prev) => ({ ...prev, contact_number: isValid }));
   };
 
   const handleSubmit = async (e) => {
@@ -160,12 +158,17 @@ const AddConsumerForm = ({ open, onClose, onAdd, refreshTable }) => {
               label="Account No"
               type="text"
               fullWidth
-              error={!!formErrors.accountNo}
-              helperText={formErrors.accountNo}
+              error={!!formErrors.accountNo || !isValid.accountNo}
+              helperText={formErrors.accountNo || (!isValid.accountNo && 'Account number must be 10 digits')}
               value={formData.accountNo}
               onChange={handleInputChange}
+              sx={{
+                '& .MuiInputBase-root': {
+                  borderColor: isValid.accountNo ? 'blue' : (formErrors.accountNo ? 'red' : ''),
+                },
+              }}
               InputProps={{
-                endAdornment: fieldValidations.accountNo ? <CheckCircleIcon sx={{ color: 'green' }} /> : <ErrorIcon sx={{ color: 'red' }} />,
+                endAdornment: isValid.accountNo && <span style={{ color: 'green' }}>✔</span>,
               }}
             />
             <TextField
@@ -196,12 +199,17 @@ const AddConsumerForm = ({ open, onClose, onAdd, refreshTable }) => {
               label="Email"
               type="email"
               fullWidth
-              error={!!formErrors.email}
-              helperText={formErrors.email}
+              error={!!formErrors.email || !isValid.email}
+              helperText={formErrors.email || (!isValid.email && 'Enter a valid email')}
               value={formData.email}
               onChange={handleInputChange}
+              sx={{
+                '& .MuiInputBase-root': {
+                  borderColor: isValid.email ? 'blue' : (formErrors.email ? 'red' : ''),
+                },
+              }}
               InputProps={{
-                endAdornment: fieldValidations.email ? <CheckCircleIcon sx={{ color: 'green' }} /> : <ErrorIcon sx={{ color: 'red' }} />,
+                endAdornment: isValid.email && <span style={{ color: 'green' }}>✔</span>,
               }}
             />
             <TextField
@@ -249,8 +257,8 @@ const AddConsumerForm = ({ open, onClose, onAdd, refreshTable }) => {
                 <MenuItem value="">
                   <em>None</em>
                 </MenuItem>
-                <MenuItem value="1 Phase">1-Phase</MenuItem>
-                <MenuItem value="3 Phase">3-Phase</MenuItem>
+                <MenuItem value="1-Phase">1-Phase</MenuItem>
+                <MenuItem value="3-Phase">3-Phase</MenuItem>
               </Select>
               <FormHelperText>{formErrors.phase}</FormHelperText>
             </FormControl>
@@ -260,12 +268,17 @@ const AddConsumerForm = ({ open, onClose, onAdd, refreshTable }) => {
               label="Contact Number"
               type="text"
               fullWidth
-              error={!!formErrors.contact_number}
-              helperText={formErrors.contact_number}
+              error={!!formErrors.contact_number || !isValid.contact_number}
+              helperText={formErrors.contact_number || (!isValid.contact_number && 'Enter a valid contact number')}
               value={formData.contact_number}
               onChange={handleInputChange}
+              sx={{
+                '& .MuiInputBase-root': {
+                  borderColor: isValid.contact_number ? 'blue' : (formErrors.contact_number ? 'red' : ''),
+                },
+              }}
               InputProps={{
-                endAdornment: fieldValidations.contact_number ? <CheckCircleIcon sx={{ color: 'green' }} /> : <ErrorIcon sx={{ color: 'red' }} />,
+                endAdornment: isValid.contact_number && <span style={{ color: 'green' }}>✔</span>,
               }}
             />
             <DialogActions>

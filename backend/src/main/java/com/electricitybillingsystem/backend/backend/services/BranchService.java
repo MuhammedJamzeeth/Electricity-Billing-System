@@ -13,4 +13,7 @@ public interface BranchService {
     Branch createBranch(BranchAddRequestDto branchAddRequestDto);
     Branch updateBranch(Integer branchId, BranchUpdateDto branchDetails);
     void deleteBranch(Integer branchId);
+
+    //branch count in dashboard
+    long getBranchCount();
 }

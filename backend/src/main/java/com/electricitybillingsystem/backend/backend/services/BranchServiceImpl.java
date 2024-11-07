@@ -83,4 +83,10 @@ public class BranchServiceImpl implements BranchService {
     public void deleteBranch(Integer branchId) {
         branchRepository.deleteById(branchId);
     }
+
+    //dashboard count
+    @Override
+    public long getBranchCount() {
+        return branchRepository.countBranch();
+    }
 }

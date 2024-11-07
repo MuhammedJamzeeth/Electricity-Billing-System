@@ -143,7 +143,7 @@ DELIMITER //
 CREATE PROCEDURE GetPaymentsByConsumer(IN search_term VARCHAR(255))
 BEGIN
     -- Check if any payments exist for the given account number or full name
-    SELECT p.payment_id, p.receipt_number, p.amount, p.payment_date
+    SELECT p.payment_id,p.account_number, p.receipt_number,c.address, p.amount, p.payment_date,CONCAT(c.first_name, ' ', c.last_name) AS full_name
     FROM payment p
              JOIN consumer c ON p.account_number = c.account_no
     WHERE p.account_number = search_term OR CONCAT(c.first_name, ' ', c.last_name) = search_term;
@@ -185,3 +185,27 @@ CREATE TABLE monthly_reading (
     FOREIGN KEY (emp_Id) REFERENCES employee(emp_Id),
     FOREIGN KEY (account_no) REFERENCES consumer(account_no)
 );
+
+-- employee count for dashboard
+SELECT COUNT(*) AS employee_count FROM employee;
+
+-- branch count
+SELECT COUNT(*) AS branch_count FROM branch;
+
+-- user count
+SELECT COUNT(*) AS user_count FROM consumer;
+
+-- payment count
+SELECT COUNT(*) AS payment_count FROM payment;
+
+-- graph
+SELECT
+    EXTRACT(MONTH FROM payment_date) AS month,
+    SUM(amount) AS total_payment
+FROM
+    payment
+GROUP BY
+    EXTRACT(MONTH FROM payment_date)
+ORDER BY
+    month;
+

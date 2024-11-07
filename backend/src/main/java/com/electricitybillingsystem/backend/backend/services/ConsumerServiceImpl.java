@@ -34,6 +34,9 @@ public class ConsumerServiceImpl implements ConsumerService {
                 () -> new NotFoundException("Branch not found")
         );
         return consumerRepository.findConsumerByBranch(branch);
+
+        return consumerRepository.findConsumerByBranch(branch);
+
     }
 
     @Override
@@ -75,6 +78,13 @@ public class ConsumerServiceImpl implements ConsumerService {
         }
     }
 
+
+
+    //consumer count dash
+    @Override
+    public long getConsumerCount() {
+        return consumerRepository.countConsumer();
+    }
 
 
 }
