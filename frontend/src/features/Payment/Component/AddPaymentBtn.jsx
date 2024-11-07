@@ -42,7 +42,7 @@ const AddPaymentBtn = () => {
         if (!accountNumber) return setFormData((prev) => ({ ...prev, customerName: '' }));
 
         try {
-            const response = await fetch('http://localhost:8081/payments');
+            const response = await fetch('http://localhost:8081/payments/all');
             const data = await response.json();
             const customer = data.find(payment => payment.consumer.accountNo.toString() === accountNumber);
             setFormData((prevData) => ({
@@ -172,3 +172,4 @@ const AddPaymentBtn = () => {
 };
 
 export default AddPaymentBtn;
+

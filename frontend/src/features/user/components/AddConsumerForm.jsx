@@ -18,6 +18,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const AddConsumerForm = ({ open, onClose, onAdd, refreshTable }) => {
   const [formData, setFormData] = useState({
+    id: '',
     accountNo: '',
     firstName: '',
     lastName: '',
@@ -30,13 +31,26 @@ const AddConsumerForm = ({ open, onClose, onAdd, refreshTable }) => {
   });
 
   const [formErrors, setFormErrors] = useState({});
-  const [consumerId, setConsumerId] = useState(1);  // Counter to simulate auto-incremented ID
 
   useEffect(() => {
     if (open) {
+      fetchNextConsumerId();
       resetForm();
     }
   }, [open]);
+
+  const fetchNextConsumerId = async () => {
+    try {
+      const response = await axios.get('http://localhost:8081/consumers');
+      if (response.status === 200 && Array.isArray(response.data)) {
+        const nextId = response.data.length + 1;
+        setFormData((prevData) => ({ ...prevData, id: nextId }));
+      }
+    } catch (error) {
+      console.error('Error fetching consumer ID:', error);
+      toast.error('Failed to fetch consumer ID. Please try again.');
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -45,6 +59,7 @@ const AddConsumerForm = ({ open, onClose, onAdd, refreshTable }) => {
 
   const resetForm = () => {
     setFormData({
+      id: '',
       accountNo: '',
       firstName: '',
       lastName: '',
@@ -81,21 +96,14 @@ const AddConsumerForm = ({ open, onClose, onAdd, refreshTable }) => {
     }
 
     try {
-      // Generate new consumer ID and prepare data
-      const newConsumerData = { ...formData, id: consumerId };
+      const response = await axios.post('http://localhost:8081/consumers/add', formData);
 
-      // Make the POST request to add a new consumer
-      const response = await axios.post('http://localhost:8081/consumers/add', newConsumerData);
-      
       if (response.status === 200 || response.status === 201) {
-        onAdd(response.data);  // Notify parent component with the new consumer data
+        onAdd(response.data);
         toast.success('Consumer added successfully!');
-        resetForm();  // Reset the form after successful submission
-        refreshTable();  // Optionally refresh the table if needed
-        onClose();  // Close the dialog
-
-        // Increment the consumerId counter for the next insertion
-        setConsumerId((prevId) => prevId + 1);
+        resetForm();
+        refreshTable();
+        onClose();
       } else {
         throw new Error('Invalid response data');
       }
@@ -223,7 +231,15 @@ const AddConsumerForm = ({ open, onClose, onAdd, refreshTable }) => {
           </form>
         </DialogContent>
       </Dialog>
-      <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} newestOnTop={false} closeOnClick draggable pauseOnHover />
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        draggable
+        pauseOnHover
+      />
     </>
   );
 };

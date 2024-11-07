@@ -1,10 +1,22 @@
 import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogActions, Button, TextField, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
+import {
+  Dialog,
+  DialogContent,
+  DialogActions,
+  Button,
+  TextField,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
+  Grid,
+  Typography
+} from '@mui/material';
 import { toast } from 'react-toastify';
 import useUsers from '../hooks/useUsers';
 
 function EditConsumerForm({ consumer, onCancel }) {
-  const { updateUser } = useUsers(); 
+  const { updateUser } = useUsers();
   const [formData, setFormData] = useState({
     firstName: consumer.firstName || '',
     lastName: consumer.lastName || '',
@@ -37,7 +49,7 @@ function EditConsumerForm({ consumer, onCancel }) {
       const response = await updateUser(consumer.accountNo, updatedConsumer);
       if (response) {
         toast.success('Consumer details updated successfully!');
-        onCancel(); 
+        onCancel();
       } else {
         toast.error('Failed to update consumer. Please try again.');
       }
@@ -47,84 +59,119 @@ function EditConsumerForm({ consumer, onCancel }) {
   };
 
   return (
-    <Dialog open={Boolean(consumer)} onClose={onCancel}>
+    <Dialog open={Boolean(consumer)} onClose={onCancel} maxWidth="sm" fullWidth>
       <DialogContent>
-        <TextField
-          margin="dense"
-          label="First Name"
-          name="firstName"
-          value={formData.firstName || ''}
-          onChange={handleChange}
-          fullWidth
-        />
-        <TextField
-          margin="dense"
-          label="Last Name"
-          name="lastName"
-          value={formData.lastName || ''}
-          onChange={handleChange}
-          fullWidth
-        />
-        <TextField
-          margin="dense"
-          label="Email"
-          name="email"
-          value={formData.email || ''}
-          onChange={handleChange}
-          fullWidth
-        />
-        <TextField
-          margin="dense"
-          label="Contact Number"
-          name="contact_number"
-          value={formData.contact_number || ''}
-          onChange={handleChange}
-          fullWidth
-        />
-        <TextField
-          margin="dense"
-          label="Address"
-          name="address"
-          value={formData.address || ''}
-          onChange={handleChange}
-          fullWidth
-        />
-        <TextField
-          margin="dense"
-          label="Meter No"
-          name="meterNo"
-          value={formData.meterNo || ''}
-          onChange={handleChange}
-          fullWidth
-        />
-        <TextField
-          margin="dense"
-          label="Join Date"
-          name="joinDate"
-          value={formData.joinDate || ''}
-          onChange={handleChange}
-          fullWidth
-        />
-
-        {/* Phase Dropdown */}
-        <FormControl fullWidth margin="dense">
-          <InputLabel>Phase</InputLabel>
-          <Select
-            name="phase"
-            value={formData.phase || ''}
-            onChange={handleChange}
-            label="Phase"
-          >
-            <MenuItem value="1-Phase">1-Phase</MenuItem>
-            <MenuItem value="3-Phase">3-Phase</MenuItem>
-          </Select>
-        </FormControl>
+        <Typography variant="h6" gutterBottom sx={{ textAlign: 'center', mb: 2 }}>
+          Edit Consumer Details
+        </Typography>
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              margin="dense"
+              label="First Name"
+              name="firstName"
+              value={formData.firstName}
+              onChange={handleChange}
+              fullWidth
+              variant="outlined"
+              size="small"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              margin="dense"
+              label="Last Name"
+              name="lastName"
+              value={formData.lastName}
+              onChange={handleChange}
+              fullWidth
+              variant="outlined"
+              size="small"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              margin="dense"
+              label="Email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              fullWidth
+              variant="outlined"
+              size="small"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              margin="dense"
+              label="Contact Number"
+              name="contact_number"
+              value={formData.contact_number}
+              onChange={handleChange}
+              fullWidth
+              variant="outlined"
+              size="small"
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              margin="dense"
+              label="Address"
+              name="address"
+              value={formData.address}
+              onChange={handleChange}
+              fullWidth
+              variant="outlined"
+              size="small"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              margin="dense"
+              label="Meter No"
+              name="meterNo"
+              value={formData.meterNo}
+              onChange={handleChange}
+              fullWidth
+              variant="outlined"
+              size="small"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              margin="dense"
+              label="Join Date"
+              name="joinDate"
+              value={formData.joinDate}
+              onChange={handleChange}
+              type="date"
+              fullWidth
+              variant="outlined"
+              size="small"
+              InputLabelProps={{ shrink: true }}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <FormControl fullWidth margin="dense" variant="outlined" size="small">
+              <InputLabel>Phase</InputLabel>
+              <Select
+                name="phase"
+                value={formData.phase}
+                onChange={handleChange}
+                label="Phase"
+              >
+                <MenuItem value="1-Phase">1-Phase</MenuItem>
+                <MenuItem value="3-Phase">3-Phase</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+        </Grid>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={onCancel} color="primary">
+      <DialogActions sx={{ justifyContent: 'space-between', padding: '16px' }}>
+        <Button onClick={onCancel} color="secondary" variant="outlined">
           Cancel
         </Button>
-        <Button onClick={handleSave} color="secondary">
+        <Button onClick={handleSave} color="primary" variant="contained">
           Save
         </Button>
       </DialogActions>

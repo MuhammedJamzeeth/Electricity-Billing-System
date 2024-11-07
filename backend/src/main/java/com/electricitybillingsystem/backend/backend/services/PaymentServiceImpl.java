@@ -3,7 +3,9 @@ package com.electricitybillingsystem.backend.backend.services;
 import com.electricitybillingsystem.backend.backend.dto.PaymentDTO;
 import com.electricitybillingsystem.backend.backend.exceptions.InvalidCredentialException;
 import com.electricitybillingsystem.backend.backend.models.Payment;
+import com.electricitybillingsystem.backend.backend.models.PaymentConsumerView;
 import com.electricitybillingsystem.backend.backend.repositories.ConsumerRepository;
+import com.electricitybillingsystem.backend.backend.repositories.PaymentConsumerViewRepository;
 import com.electricitybillingsystem.backend.backend.repositories.PaymentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,14 +18,15 @@ public class PaymentServiceImpl implements PaymentService {
 
     private final PaymentRepository paymentRepository;
     private final ConsumerRepository consumerRepository;
+    private final PaymentConsumerViewRepository paymentConsumerViewRepository;
 
     @Override
-    public List<Payment> getPayments() {
+    public List<Payment> getAllPayments() {
         return paymentRepository.findAll();
     }
 
     @Override
-    public Payment getPayment(Long id) {
+    public Payment getPaymentById(Long id) {
         return paymentRepository.getReferenceById(id);
     }
 
@@ -39,4 +42,19 @@ public class PaymentServiceImpl implements PaymentService {
         newPayment.setConsumer(consumer);
         return paymentRepository.save(newPayment);
     }
+
+    @Override
+    public List<PaymentConsumerView> getPaymentDetailsFromView() {
+        return paymentConsumerViewRepository.findAll();
+    }
+
+    @Override
+    public List<PaymentConsumerView> searchPayments(String searchTerm) {
+        if (searchTerm.matches("\\d+")) {
+            return paymentConsumerViewRepository.findByAccountNumber(Long.valueOf(searchTerm));
+        } else {
+            return paymentConsumerViewRepository.findByFullName(searchTerm);
+        }
+    }
+
 }

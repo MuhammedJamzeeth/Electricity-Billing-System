@@ -48,7 +48,6 @@ CREATE TABLE IF NOT EXISTS consumer (
     contact_number VARCHAR(15) NOT NULL
     );
 
-
 CREATE INDEX idx_consumer_id ON consumer(id);
 
 -- Siyam --------------------------------------------
@@ -62,7 +61,7 @@ CREATE TABLE IF NOT EXISTS payment (
     FOREIGN KEY (account_number) REFERENCES consumer(account_no)
 );
 
-
+-- trigger start
 DELIMITER //
 
 CREATE TRIGGER after_payment_insert
@@ -73,12 +72,40 @@ BEGIN
     SET total_bill = total_bill - NEW.amount
     WHERE account_no = NEW.account_number;
 END //
-
+-- trigger end
+-- view start
 DELIMITER ;
 
--- Akthar --------------------------------------------
+CREATE VIEW payment_consumer_view AS
+SELECT
+    p.payment_id,
+    p.account_number,
+    p.receipt_number,
+    CONCAT(c.first_name, ' ', c.last_name) AS full_name,
+    c.address,
+    p.payment_date,
+    p.amount
+FROM
+    payment p
+        JOIN
+    consumer c ON p.account_number = c.account_no;
+-- view end
+-- stored procedure start
+DELIMITER //
 
+CREATE PROCEDURE GetPaymentsByConsumer(IN search_term VARCHAR(255))
+BEGIN
+    -- Check if any payments exist for the given account number or full name
+    SELECT p.payment_id, p.receipt_number, p.amount, p.payment_date
+    FROM payment p
+             JOIN consumer c ON p.account_number = c.account_no
+    WHERE p.account_number = search_term OR CONCAT(c.first_name, ' ', c.last_name) = search_term;
+END //
 
+DELIMITER ;
+-- stored procedure end
+
+-- akthar
 CREATE TABLE IF NOT EXISTS EBill (
    bill_id BIGINT AUTO_INCREMENT PRIMARY KEY,
    account_no BIGINT NOT NULL,
