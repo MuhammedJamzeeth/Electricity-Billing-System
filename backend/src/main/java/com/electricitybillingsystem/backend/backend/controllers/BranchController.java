@@ -1,20 +1,22 @@
 package com.electricitybillingsystem.backend.backend.controllers;
 
 
+import com.electricitybillingsystem.backend.backend.dto.BranchAddRequestDto;
 import com.electricitybillingsystem.backend.backend.models.Branch;
 import com.electricitybillingsystem.backend.backend.services.BranchService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequestMapping("/branch")
+@RequiredArgsConstructor
 @CrossOrigin(origins = "*", allowedHeaders = "*")
-@RequestMapping("/branches")
 public class BranchController {
 
-    @Autowired
-    private BranchService branchService;
+    private final BranchService branchService;
 
     @GetMapping
     public List<Branch> getAllBranches() {
@@ -27,8 +29,8 @@ public class BranchController {
     }
 
     @PostMapping("/add")
-    public Branch createBranch(@RequestBody Branch branch) {
-        return branchService.createBranch(branch);
+    public Branch createBranch(@Valid  @RequestBody BranchAddRequestDto branchAddRequestDto) {
+        return branchService.createBranch(branchAddRequestDto);
     }
 
     @PutMapping("/update/{branchId}")

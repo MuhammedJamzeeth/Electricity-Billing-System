@@ -7,6 +7,8 @@ import Dashboard from "./pages/Home/Dashboard.jsx";
 import User from "./pages/Home/User.jsx";
 import Payment from "./pages/Payment/Payment.jsx";
 import Branches from "./pages/Home/Branches.jsx";
+import AddBranch from "./pages/Home/AddBranch.jsx";
+import EmployeeTable from "./pages/Employee/employee.jsx";
 
 
 const router = createBrowserRouter([
@@ -29,6 +31,14 @@ const router = createBrowserRouter([
             {
                 path: "user",
                 element: <User/>
+            },
+            {
+                path: "add-branch",
+                element: <AddBranch/>
+            },
+            {
+                path: "employee",
+                element: <EmployeeTable/>
             }
         ]
     },

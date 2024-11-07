@@ -26,10 +26,15 @@ public class Branch {
     @Column(name = "location", length = 200)
     private String location;
 
-    @Column(name = "branch_Email", length = 100)
-    private String branchEmail;
+    @Column(name = "branch_username", length = 100)
+    private String branchUsername;
 
     @Column(name = "contact_no", length = 20)
     private String contactNo;
+
+    @Column(name = "password")
+    private String password;
+
+
 }
 

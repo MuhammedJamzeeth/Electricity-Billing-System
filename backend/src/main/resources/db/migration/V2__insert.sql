@@ -1,5 +1,6 @@
 INSERT INTO admin (username, password) VALUES ('admin', '$2a$10$hetGOYyl53foqdLMC.kEUeT6HbDGG9FKoKalGOqKUOy0cOk5ZOv3a');
 
+-- Fayas --------------------------------------------
 
 INSERT INTO consumer (id,account_no,first_name, last_name, email, meter_no,join_date, address, phase, contact_number)
 VALUES
@@ -33,8 +34,9 @@ VALUES
          (8947612864, '2024-04-01', '2024-04-30', 250, 240, 300.00, 300.00),
          (4589756176, '2024-05-01', '2024-05-31', 180, 190, 175.25, 175.25);
 
--- praveen
-INSERT INTO `electricity-billing-system`.`branch` (`branch_Id`, `branch_name`, `location`, `branch_Email`, `contact_no`) VALUES ('2', 'Colombo CEB', 'Colombo - 11', 'CEB_colombo@gmail.com', '011-3454675');
+-- praveen --------------------------------------------
+
+INSERT INTO `electricity-billing-system`.`branch` (`branch_Id`, `branch_name`, `location`, `branch_username`, `contact_no`) VALUES ('2', 'Colombo CEB', 'Colombo - 11', 'CEB_colombo@gmail.com', '011-3454675');
 
 INSERT INTO employee (emp_Id, emp_Name, address, branch_Id, contact_No) VALUES
 (1001, 'Nimal Perera', '123 Galle Road, Colombo', 2, '0712345678'),

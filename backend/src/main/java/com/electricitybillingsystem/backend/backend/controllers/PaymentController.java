@@ -2,8 +2,8 @@ package com.electricitybillingsystem.backend.backend.controllers;
 
 import com.electricitybillingsystem.backend.backend.dto.PaymentDTO;
 import com.electricitybillingsystem.backend.backend.models.Payment;
+import com.electricitybillingsystem.backend.backend.models.PaymentConsumerView;
 import com.electricitybillingsystem.backend.backend.services.PaymentService;
-import com.electricitybillingsystem.backend.backend.services.ConsumerService; // Import the ConsumerService
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,19 +17,30 @@ import java.util.List;
 public class PaymentController {
     private final PaymentService paymentService;
 
+    @GetMapping("/payments/all")
+    public List<Payment> getAllPayments() {
+        return paymentService.getAllPayments();
+    }
+
     @GetMapping("/payments")
-    public List<Payment> getPayments() {
-        return paymentService.getPayments();
+    public List<PaymentConsumerView> getPaymentsFromView() { // using view
+        return paymentService.getPaymentDetailsFromView();
     }
 
     @GetMapping("/payments/{id}")
-    public Payment getPayment(@PathVariable Long id) {
-        return paymentService.getPayment(id);
+    public Payment getPaymentById(@PathVariable Long id) {
+        return paymentService.getPaymentById(id);
     }
 
     @PostMapping("/payments/add")
     public ResponseEntity<Payment> createPayment(@RequestBody PaymentDTO payment) {
         Payment createdPayment = paymentService.createPayment(payment);
         return new ResponseEntity<>(createdPayment, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/payments/search")
+    public ResponseEntity<List<PaymentConsumerView>> searchPayments(@RequestParam String searchTerm) {
+        List<PaymentConsumerView> payments = paymentService.searchPayments(searchTerm);
+        return ResponseEntity.ok(payments);
     }
 }
