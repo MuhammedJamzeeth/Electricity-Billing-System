@@ -11,5 +11,5 @@ public interface PaymentService {
     Payment getPaymentById(Long id);
     Payment createPayment(PaymentDTO payment);
     List<PaymentConsumerView> getPaymentDetailsFromView();
-    List<PaymentConsumerView> searchPayments(String searchTerm);
+    List<PaymentConsumerView> findPaymentsByConsumer(String searchTerm);
 }
