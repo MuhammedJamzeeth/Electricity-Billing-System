@@ -33,7 +33,7 @@ const PaymentsTbl = () => {
             <div className="overflow-x-auto">
                 <div className="max-h-60 overflow-y-auto rounded-lg">
                     <table className="w-full text-left border-collapse bg-white">
-                        <thead className="sticky top-0 bg-blue-100 text-gray-700 shadow">
+                        <thead className="sticky top-0 bg-blue-100 text-black shadow">
                         <tr>
                             <th className="p-4 font-medium">Account Number</th>
                             <th className="p-4 font-medium">Receipt Number</th>
@@ -43,7 +43,7 @@ const PaymentsTbl = () => {
                             <th className="p-4 font-medium">Amount Paid</th>
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody className="text-gray-700">
                         {payments.map((payment, index) => (
                             <tr
                                 key={`${payment.paymentId}-${payment.accountNumber}`}
