@@ -42,4 +42,8 @@ public class Consumer {
     @Column(nullable = false)
     private String contact_number ;
 
+    @ManyToOne
+    @JoinColumn(name = "branch_id", referencedColumnName = "branch_id")
+    private Branch branch;
+
 }

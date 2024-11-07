@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Table(name = "branch")
 @Getter
@@ -34,6 +36,10 @@ public class Branch {
 
     @Column(name = "password")
     private String password;
+
+    @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<Consumer> consumers;
+
 
 
 }

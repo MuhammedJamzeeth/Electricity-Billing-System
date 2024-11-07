@@ -1,10 +1,13 @@
 package com.electricitybillingsystem.backend.backend.services;
 
+import com.electricitybillingsystem.backend.backend.models.Branch;
 import com.electricitybillingsystem.backend.backend.models.Consumer;
+import com.electricitybillingsystem.backend.backend.repositories.BranchRepository;
 import com.electricitybillingsystem.backend.backend.repositories.ConsumerRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +20,21 @@ public class ConsumerServiceImpl implements ConsumerService {
 
 
     private final ConsumerRepository consumerRepository;
+    private final BranchRepository branchRepository;
+
     @Override
     public List<Consumer> getAllConsumers() {
         return consumerRepository.findAll(Sort.by("id"));
     }
+
+    @Override
+    public List<Consumer> getConsumersByBranchId(int branchId) {
+        var branch = branchRepository.findById(branchId).orElseThrow(
+                () -> new ChangeSetPersister.NotFoundException("Branch not found")
+        );
+        return consumerRepository.findByBranch(branchId, Sort.by("id"));
+    }
+
     @Override
     public Consumer createConsumer(Consumer consumer) {
         return consumerRepository.save(consumer);
@@ -49,6 +63,17 @@ public class ConsumerServiceImpl implements ConsumerService {
     public void deleteConsumer(Long accountNo) {
         consumerRepository.deleteById(accountNo);
     }
+
+    @Override
+    public Consumer searchConsumerByAccountNo(Long accountNo) {
+        Optional<Consumer> consumer = consumerRepository.findById(accountNo);
+        if (consumer.isPresent()) {
+            return consumer.get();
+        } else {
+            throw new RuntimeException("Consumer not found with account number: " + accountNo);
+        }
+    }
+
 
 
 }

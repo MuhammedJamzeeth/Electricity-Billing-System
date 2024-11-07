@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Table,
   TableBody,
@@ -14,54 +14,66 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
-  DialogTitle,
+  DialogTitle
 } from '@mui/material';
 import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
 import EditIcon from '@mui/icons-material/Edit';
-import useUsers from '../hooks/useUsers';
 import { toast } from 'react-toastify';
-import EditConsumerForm from './EditConsumerForm'; 
+import EditConsumerForm from './EditConsumerForm';
+import useUsers from '../hooks/useUsers';
 
-function UserTable() {
+function UserTable({ searchTerm }) {
   const { users, loading, error, deleteUser } = useUsers();
-  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
-  const [deletingAccountNo, setDeletingAccountNo] = useState(null);
-  const [editConsumer, setEditConsumer] = useState(null);
+  const [filteredUsers, setFilteredUsers] = useState([]);
+  const [openEditDialog, setOpenEditDialog] = useState(false);
+  const [selectedConsumer, setSelectedConsumer] = useState(null);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [consumerToDelete, setConsumerToDelete] = useState(null);
 
-  const handleOpenConfirmation = () => {
-    setConfirmDeleteOpen(true);
-  };
+  useEffect(() => {
+    // Filter users based on the search term passed as a prop
+    if (searchTerm) {
+      setFilteredUsers(
+        users.filter((user) =>
+          user.accountNo.toString().toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      );
+    } else {
+      setFilteredUsers(users);
+    }
+  }, [users, searchTerm]);
 
-  const handleCloseConfirmation = () => {
-    setConfirmDeleteOpen(false);
-  };
-
-  const handleDeleteClick = (accountNo) => {
-    setDeletingAccountNo(accountNo);
-    handleOpenConfirmation();
+  const handleDeleteClick = (consumer) => {
+    setConsumerToDelete(consumer);
+    setOpenDeleteDialog(true);
   };
 
   const handleDeleteConfirm = async () => {
-    if (deletingAccountNo) {
-      try {
-        await deleteUser(deletingAccountNo);
-        toast.success('Consumer deleted successfully!');
-      } catch (error) {
-        toast.error('Failed to delete consumer. Please try again.');
-      } finally {
-        handleCloseConfirmation();
-        setDeletingAccountNo(null);
-      }
+    try {
+      await deleteUser(consumerToDelete.accountNo);
+      toast.success('Consumer deleted successfully!');
+      setOpenDeleteDialog(false);
+      setConsumerToDelete(null);
+    } catch (error) {
+      toast.error('Failed to delete consumer');
+      setOpenDeleteDialog(false);
+      setConsumerToDelete(null);
     }
   };
 
-  const handleEditClick = (consumer) => {
-    setEditConsumer(consumer); 
+  const handleDeleteCancel = () => {
+    setOpenDeleteDialog(false);
+    setConsumerToDelete(null);
   };
 
-  const handleEditCancel = () => {
-    setEditConsumer(null); 
+  const handleEditClick = (consumer) => {
+    setSelectedConsumer(consumer);
+    setOpenEditDialog(true);
+  };
+
+  const handleCloseEditDialog = () => {
+    setOpenEditDialog(false);
+    setSelectedConsumer(null);
   };
 
   if (loading) {
@@ -85,8 +97,8 @@ function UserTable() {
       <Paper sx={{ width: '100%', overflow: 'hidden' }}>
         <TableContainer component={Paper} sx={{ maxHeight: '600px', overflowY: 'auto' }}>
           <Table stickyHeader>
-            <TableHead  >
-              <TableRow>
+            <TableHead>
+              <TableRow sx={{ backgroundColor: 'blue' }}>
                 <TableCell align="center">Id</TableCell>
                 <TableCell align="center">Account No</TableCell>
                 <TableCell align="center">Full Name</TableCell>
@@ -100,14 +112,16 @@ function UserTable() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {users.map((user) => (
+              {filteredUsers.map((user) => (
                 <TableRow key={user.accountNo} hover>
                   <TableCell align="center">{user.id}</TableCell>
                   <TableCell align="center">{user.accountNo}</TableCell>
                   <TableCell align="center">{`${user.firstName} ${user.lastName}`}</TableCell>
                   <TableCell align="center">{user.email}</TableCell>
                   <TableCell align="center">{user.meterNo}</TableCell>
-                  <TableCell align="center">{user.joinDate}</TableCell>
+                  <TableCell align="center">
+                    {new Date(user.joinDate).toLocaleDateString('en-GB')}
+                  </TableCell>
                   <TableCell align="center">{user.address}</TableCell>
                   <TableCell align="center">{user.phase}</TableCell>
                   <TableCell align="center">{user.contact_number}</TableCell>
@@ -115,7 +129,7 @@ function UserTable() {
                     <Button onClick={() => handleEditClick(user)}>
                       <EditIcon />
                     </Button>
-                    <Button onClick={() => handleDeleteClick(user.accountNo)} sx={{ color: 'red' }}>
+                    <Button onClick={() => handleDeleteClick(user)} sx={{ color: 'red' }}>
                       <DeleteForeverOutlinedIcon sx={{ color: 'inherit' }} />
                     </Button>
                   </TableCell>
@@ -126,29 +140,26 @@ function UserTable() {
         </TableContainer>
       </Paper>
 
-      <Dialog open={confirmDeleteOpen} onClose={handleCloseConfirmation}>
+      {/* Edit Consumer Form Dialog */}
+      <EditConsumerForm
+        consumer={selectedConsumer}
+        onCancel={handleCloseEditDialog}
+      />
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog
+        open={openDeleteDialog}
+        onClose={handleDeleteCancel}
+      >
         <DialogTitle>Confirm Deletion</DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            Are you sure you want to delete this consumer? This action cannot be undone.
-          </DialogContentText>
+          <Typography>Are you sure you want to delete this consumer?</Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseConfirmation} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleDeleteConfirm} color="secondary">
-            Delete
-          </Button>
+          <Button onClick={handleDeleteCancel} color="secondary">Cancel</Button>
+          <Button onClick={handleDeleteConfirm} color="primary">Delete</Button>
         </DialogActions>
       </Dialog>
-
-      {editConsumer && (
-        <EditConsumerForm
-          consumer={editConsumer}
-          onCancel={handleEditCancel}
-        />
-      )}
     </div>
   );
 }

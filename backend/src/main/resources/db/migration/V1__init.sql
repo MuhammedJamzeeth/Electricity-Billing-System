@@ -45,7 +45,10 @@ CREATE TABLE IF NOT EXISTS consumer (
     join_date DATE NOT NULL,
     address VARCHAR(255) NOT NULL,
     phase VARCHAR(15) NOT NULL,
-    contact_number VARCHAR(15) NOT NULL
+    contact_number VARCHAR(15) NOT NULL,
+    branch_id INT NOT NULL,
+    FOREIGN KEY (branch_id) REFERENCES branch (branch_Id),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
 CREATE INDEX idx_consumer_id ON consumer(id);
