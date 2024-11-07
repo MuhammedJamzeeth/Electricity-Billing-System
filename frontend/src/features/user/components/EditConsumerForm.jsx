@@ -17,6 +17,7 @@ import useUsers from '../hooks/useUsers';
 
 function EditConsumerForm({ consumer, onCancel }) {
   const { updateUser } = useUsers();
+  const user = JSON.parse(localStorage.getItem('user'))
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -40,7 +41,7 @@ function EditConsumerForm({ consumer, onCancel }) {
         meterNo: consumer.meterNo || '',
         joinDate: consumer.joinDate || '',
         phase: consumer.phase || '1-Phase',
-        branch: consumer.branch || ''
+        branch: user.userID || ''
       });
     }
   }, [consumer]);

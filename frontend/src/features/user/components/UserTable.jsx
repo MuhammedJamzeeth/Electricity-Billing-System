@@ -14,7 +14,7 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle
+  DialogTitle, TablePagination
 } from '@mui/material';
 import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
 import EditIcon from '@mui/icons-material/Edit';
@@ -29,6 +29,8 @@ function UserTable({ searchTerm }) {
   const [selectedConsumer, setSelectedConsumer] = useState(null);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [consumerToDelete, setConsumerToDelete] = useState(null);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   useEffect(() => {
     if (users) {
@@ -60,6 +62,15 @@ function UserTable({ searchTerm }) {
       setOpenDeleteDialog(false);
       setConsumerToDelete(null);
     }
+  };
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
   };
 
   const handleDeleteCancel = () => {
@@ -95,47 +106,59 @@ function UserTable({ searchTerm }) {
 
   return (
     <div >
-      <Paper sx={{ width: '97%', overflow: 'hidden', borderRadius: "20px" }}>
-        <TableContainer component={Paper} sx={{ maxHeight: '500px', overflowY: 'auto' }}>
+      <Paper sx={{ width: '100%', borderRadius: "25px",}}>
+        <TableContainer component={Paper} sx={{
+          maxHeight: "320px"
+        }}>
           <Table stickyHeader>
             <TableHead>
               <TableRow>
-                
                 <TableCell align="center">Account No</TableCell>
                 <TableCell align="center">Full Name</TableCell>
-                <TableCell align="center">Email</TableCell>
+                {/*<TableCell align="center">Email</TableCell>*/}
                 <TableCell align="center">Meter No</TableCell>
                 <TableCell align="center">Join Date</TableCell>
-                <TableCell align="center">Address</TableCell>
+                {/*<TableCell align="center">Address</TableCell>*/}
                 <TableCell align="center">Phase</TableCell>
                 <TableCell align="center">Contact Number</TableCell>
                 <TableCell align="center">Action</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {filteredUsers.map((user, index) => (
-                <TableRow key={user.accountNo} hover>
-                  <TableCell align="center">{user.accountNo}</TableCell>
-                  <TableCell align="center">{`${user.firstName} ${user.lastName}`}</TableCell>
-                  <TableCell align="center">{user.email}</TableCell>
-                  <TableCell align="center">{user.meterNo}</TableCell>
-                  <TableCell align="center">{new Date(user.joinDate).toLocaleDateString('en-GB')}</TableCell>
-                  <TableCell align="center">{user.address}</TableCell>
-                  <TableCell align="center">{user.phase}</TableCell>
-                  <TableCell align="center">{user.contact_number}</TableCell>
-                  <TableCell align="center">
-                    <Button onClick={() => handleEditClick(user)}>
-                      <EditIcon />
-                    </Button>
-                    <Button onClick={() => handleDeleteClick(user)} sx={{ color: 'red' }}>
-                      <DeleteForeverOutlinedIcon sx={{ color: 'inherit' }} />
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {filteredUsers
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((user, index) => (
+                      <TableRow key={user.accountNo} hover>
+                        <TableCell align="center">{user.accountNo}</TableCell>
+                        <TableCell align="center">{`${user.firstName} ${user.lastName}`}</TableCell>
+                        {/*<TableCell align="center">{user.email}</TableCell>*/}
+                        <TableCell align="center">{user.meterNo}</TableCell>
+                        <TableCell align="center">{new Date(user.joinDate).toLocaleDateString('en-GB')}</TableCell>
+                        {/*<TableCell align="center">{user.address}</TableCell>*/}
+                        <TableCell align="center">{user.phase}</TableCell>
+                        <TableCell align="center">{user.contact_number}</TableCell>
+                        <TableCell align="center">
+                          <Button onClick={() => handleEditClick(user)}>
+                            <EditIcon />
+                          </Button>
+                          <Button onClick={() => handleDeleteClick(user)} sx={{ color: 'red' }}>
+                            <DeleteForeverOutlinedIcon sx={{ color: 'inherit' }} />
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                  ))}
             </TableBody>
           </Table>
         </TableContainer>
+        <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={filteredUsers.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+        />
       </Paper>
 
       <EditConsumerForm consumer={selectedConsumer} onCancel={handleCloseEditDialog} />

@@ -43,11 +43,12 @@ function User() {
   };
 
   return (
-    <div className="ml-6">
-      <Grid container spacing={2} alignItems="flex-end">
-        {/* Search Box */}
-        <Grid item xs={8} sm={4}>
-          <TextField
+    <div className="w-full px-4 flex flex-col items-center justify-center">
+      <div className="flex w-full justify-between">
+        <TextField
+            sx={{
+              width: "300px"
+            }}
             placeholder="Search by Account No."
             variant="outlined"
             size="small"
@@ -56,22 +57,18 @@ function User() {
             fullWidth
             InputProps={{
               endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton onClick={handleSearch}>
-                    <SearchIcon />
-                  </IconButton>
-                </InputAdornment>
+                  <InputAdornment position="end">
+                    <IconButton onClick={handleSearch}>
+                      <SearchIcon />
+                    </IconButton>
+                  </InputAdornment>
               ),
             }}
-          />
-        </Grid>
-
-        <Grid item xs={4} sm={7.5} textAlign="end">
+        />
           <Button variant="contained" color="primary" onClick={handleOpenForm}>
             Add Consumer
           </Button>
-        </Grid>
-      </Grid>
+      </div>
 
       {loading && <CircularProgress />}
 
@@ -82,7 +79,9 @@ function User() {
         </div>
       ) : null}
 
-      <Box mt={3}>
+      <Box sx={{
+        width: "100%"
+      }} mt={3}>
         <UserTable searchTerm={searchTerm} />
       </Box>
 
