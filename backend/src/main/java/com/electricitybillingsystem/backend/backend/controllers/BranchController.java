@@ -42,4 +42,10 @@ public class BranchController {
     public void deleteBranch(@PathVariable Integer branchId) {
         branchService.deleteBranch(branchId);
     }
+
+    //branch count dashboard
+    @GetMapping("/branch/count")
+    public long getBranchCount() {
+        return branchService.getBranchCount();
+    }
 }

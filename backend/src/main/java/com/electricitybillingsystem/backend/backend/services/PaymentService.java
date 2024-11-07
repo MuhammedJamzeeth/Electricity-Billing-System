@@ -12,4 +12,9 @@ public interface PaymentService {
     Payment createPayment(PaymentDTO payment);
     List<PaymentConsumerView> getPaymentDetailsFromView();
     List<PaymentConsumerView> findPaymentsByConsumer(String searchTerm);
+
+    //count
+    long getPaymentCount();
+    //graph
+    List<Object[]> getMonthlyPayments();
 }

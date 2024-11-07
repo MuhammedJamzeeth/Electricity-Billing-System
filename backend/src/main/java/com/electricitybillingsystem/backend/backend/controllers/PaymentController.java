@@ -43,4 +43,18 @@ public class PaymentController {
         List<PaymentConsumerView> payments = paymentService.findPaymentsByConsumer(searchTerm);
         return ResponseEntity.ok(payments);
     }
+
+    //count for dash
+    @GetMapping("/payment/count")
+    public long getPaymentCount() {
+        return paymentService.getPaymentCount();
+    }
+
+    //graph
+    @GetMapping("/payment/monthly")
+    public ResponseEntity<List<Object[]>> getMonthlyPayments() {
+        List<Object[]> monthlyPayments = paymentService.getMonthlyPayments();
+        return ResponseEntity.ok(monthlyPayments);
+    }
 }
+

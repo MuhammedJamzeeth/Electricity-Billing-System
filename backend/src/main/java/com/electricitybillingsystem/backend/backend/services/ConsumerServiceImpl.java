@@ -79,4 +79,11 @@ public class ConsumerServiceImpl implements ConsumerService {
 
 
 
+    //consumer count dash
+    @Override
+    public long getConsumerCount() {
+        return consumerRepository.countConsumer();
+    }
+
+
 }

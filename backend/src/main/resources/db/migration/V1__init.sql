@@ -162,3 +162,27 @@ CREATE TABLE monthly_reading (
     FOREIGN KEY (emp_Id) REFERENCES employee(emp_Id),
     FOREIGN KEY (account_no) REFERENCES consumer(account_no)
 );
+
+-- employee count for dashboard
+SELECT COUNT(*) AS employee_count FROM employee;
+
+-- branch count
+SELECT COUNT(*) AS branch_count FROM branch;
+
+-- user count
+SELECT COUNT(*) AS user_count FROM consumer;
+
+-- payment count
+SELECT COUNT(*) AS payment_count FROM payment;
+
+-- graph
+SELECT
+    EXTRACT(MONTH FROM payment_date) AS month,
+    SUM(amount) AS total_payment
+FROM
+    payment
+GROUP BY
+    EXTRACT(MONTH FROM payment_date)
+ORDER BY
+    month;
+

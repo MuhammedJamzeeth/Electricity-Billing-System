@@ -45,4 +45,10 @@ public class ConsumerController {
         return consumerService.getConsumersByBranchId(branchId);
     }
 
+    //count for dashboard
+    @GetMapping("/consumer/count")
+    public long getConsumerCount() {
+        return consumerService.getConsumerCount();
+    }
+
 }
