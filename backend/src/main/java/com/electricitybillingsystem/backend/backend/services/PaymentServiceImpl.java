@@ -8,6 +8,7 @@ import com.electricitybillingsystem.backend.backend.repositories.ConsumerReposit
 import com.electricitybillingsystem.backend.backend.repositories.PaymentConsumerViewRepository;
 import com.electricitybillingsystem.backend.backend.repositories.PaymentRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     private final PaymentRepository paymentRepository;
     private final ConsumerRepository consumerRepository;
-    private final PaymentConsumerViewRepository paymentConsumerViewRepository;
+    private PaymentConsumerViewRepository paymentConsumerViewRepository;
 
     @Override
     public List<Payment> getAllPayments() {
@@ -48,13 +49,25 @@ public class PaymentServiceImpl implements PaymentService {
         return paymentConsumerViewRepository.findAll();
     }
 
+        @Autowired
+    public void PaymentService(PaymentConsumerViewRepository paymentConsumerViewRepository) {
+        this.paymentConsumerViewRepository = paymentConsumerViewRepository;
+    }
+
+    public List<PaymentConsumerView> findPaymentsByConsumer(String searchTerm) {
+        return paymentConsumerViewRepository.findPaymentsByConsumerUsingStoredProcedure(searchTerm);
+    }
+
+    //count
     @Override
-    public List<PaymentConsumerView> searchPayments(String searchTerm) {
-        if (searchTerm.matches("\\d+")) {
-            return paymentConsumerViewRepository.findByAccountNumber(Long.valueOf(searchTerm));
-        } else {
-            return paymentConsumerViewRepository.findByFullName(searchTerm);
-        }
+    public long getPaymentCount() {
+        return paymentRepository.countPayment();
+    }
+
+    //graph
+    @Override
+    public List<Object[]> getMonthlyPayments() {
+        return paymentRepository.getMonthlyPayments();
     }
 
 }

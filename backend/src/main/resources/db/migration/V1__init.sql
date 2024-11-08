@@ -34,10 +34,53 @@ CREATE TABLE branch (
                         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE INDEX idx_users_name ON branch(branch_username);
+
+DELIMITER //
+
+CREATE TRIGGER before_branch_insert
+    BEFORE INSERT ON branch
+    FOR EACH ROW
+BEGIN
+    SET NEW.branch_username = CONCAT(NEW.branch_name, '_', NEW.location);
+END //
+
+DELIMITER ;
+
+
+DELIMITER //
+CREATE PROCEDURE checkUsernameExists(IN username VARCHAR(255), OUT existsFlag BOOLEAN)
+BEGIN
+    DECLARE temp_count INT;
+    SELECT COUNT(*) INTO temp_count FROM branch WHERE branch_name = username;
+    SET existsFlag = (temp_count > 0);
+END //
+DELIMITER ;
+
+
+DELIMITER //
+
+CREATE PROCEDURE updateBranchUsername(IN id INT, IN new_branch_name VARCHAR(255), IN new_location VARCHAR(255))
+BEGIN
+    DECLARE new_username VARCHAR(255);
+
+    SET new_username = CONCAT(new_branch_name, '_', new_location);
+
+    UPDATE branch
+    SET branch_name = new_branch_name,
+        location = new_location,
+        branch_username = new_username
+    WHERE branch_Id = id;
+END //
+
+
+DELIMITER ;
+
+
+
 -- Fayas --------------------------------------------
 
 CREATE TABLE IF NOT EXISTS consumer (
-    id INT NOT NULL,
     account_no BIGINT PRIMARY KEY,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
@@ -46,10 +89,13 @@ CREATE TABLE IF NOT EXISTS consumer (
     join_date DATE NOT NULL,
     address VARCHAR(255) NOT NULL,
     phase VARCHAR(15) NOT NULL,
-    contact_number VARCHAR(15) NOT NULL
+    contact_number VARCHAR(15) NOT NULL,
+    branch_id INT NOT NULL,
+    FOREIGN KEY (branch_id) REFERENCES branch (branch_Id)
+
     );
 
-CREATE INDEX idx_consumer_id ON consumer(id);
+
 
 -- Siyam --------------------------------------------
 
@@ -97,7 +143,7 @@ DELIMITER //
 CREATE PROCEDURE GetPaymentsByConsumer(IN search_term VARCHAR(255))
 BEGIN
     -- Check if any payments exist for the given account number or full name
-    SELECT p.payment_id, p.receipt_number, p.amount, p.payment_date
+    SELECT p.payment_id,p.account_number, p.receipt_number,c.address, p.amount, p.payment_date,CONCAT(c.first_name, ' ', c.last_name) AS full_name
     FROM payment p
              JOIN consumer c ON p.account_number = c.account_no
     WHERE p.account_number = search_term OR CONCAT(c.first_name, ' ', c.last_name) = search_term;
@@ -247,3 +293,27 @@ CREATE TABLE monthly_reading (
     FOREIGN KEY (emp_Id) REFERENCES employee(emp_Id),
     FOREIGN KEY (account_no) REFERENCES consumer(account_no)
 );
+
+-- employee count for dashboard
+SELECT COUNT(*) AS employee_count FROM employee;
+
+-- branch count
+SELECT COUNT(*) AS branch_count FROM branch;
+
+-- user count
+SELECT COUNT(*) AS user_count FROM consumer;
+
+-- payment count
+SELECT COUNT(*) AS payment_count FROM payment;
+
+-- graph
+SELECT
+    EXTRACT(MONTH FROM payment_date) AS month,
+    SUM(amount) AS total_payment
+FROM
+    payment
+GROUP BY
+    EXTRACT(MONTH FROM payment_date)
+ORDER BY
+    month;
+

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -17,23 +17,54 @@ import useUsers from '../hooks/useUsers';
 
 function EditConsumerForm({ consumer, onCancel }) {
   const { updateUser } = useUsers();
+  const user = JSON.parse(localStorage.getItem('user'))
   const [formData, setFormData] = useState({
-    firstName: consumer.firstName || '',
-    lastName: consumer.lastName || '',
-    email: consumer.email || '',
-    contact_number: consumer.contact_number || '',
-    address: consumer.address || '',
-    meterNo: consumer.meterNo || '',
-    joinDate: consumer.joinDate || '',
-    phase: ['1-Phase', '3-Phase'].includes(consumer.phase) ? consumer.phase : '',
+    firstName: '',
+    lastName: '',
+    email: '',
+    contact_number: '',
+    address: '',
+    meterNo: '',
+    joinDate: '',
+    phase: '1-Phase',
+    branch: ''
   });
+
+  useEffect(() => {
+    if (consumer) {
+      setFormData({
+        firstName: consumer.firstName || '',
+        lastName: consumer.lastName || '',
+        email: consumer.email || '',
+        contact_number: consumer.contact_number || '',
+        address: consumer.address || '',
+        meterNo: consumer.meterNo || '',
+        joinDate: consumer.joinDate || '',
+        phase: consumer.phase || '1-Phase',
+        branch: user.userID || ''  // This is read-only, will not be updated
+      });
+    }
+  }, [consumer]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
   };
 
+  const validateForm = () => {
+    const requiredFields = ['firstName', 'lastName', 'email', 'contact_number', 'address', 'branch'];
+    for (const field of requiredFields) {
+      if (!formData[field]) {
+        toast.error(`Please fill out the ${field.replace('_', ' ')} field.`);
+        return false;
+      }
+    }
+    return true;
+  };
+
   const handleSave = async () => {
+    if (!validateForm()) return;
+
     try {
       const updatedConsumer = {
         firstName: formData.firstName,
@@ -41,139 +72,122 @@ function EditConsumerForm({ consumer, onCancel }) {
         email: formData.email,
         contact_number: formData.contact_number,
         address: formData.address,
-        meterNo: formData.meterNo,
+        meterNo: formData.meterNo, // meterNo is sent as it is (read-only)
         joinDate: formData.joinDate,
         phase: formData.phase,
+        branch: formData.branch, // branch is sent as it is (read-only)
       };
 
+      console.log("Data being sent to server:", updatedConsumer);
+
       const response = await updateUser(consumer.accountNo, updatedConsumer);
-      if (response) {
+
+      if (response && (response.status === 200 || response.status === 201 || response === true)) {
         toast.success('Consumer details updated successfully!');
         onCancel();
       } else {
-        toast.error('Failed to update consumer. Please try again.');
+        throw new Error('Unexpected response');
       }
     } catch (error) {
-      toast.error('An error occurred while updating the consumer.');
+      console.error('Error saving changes:', error);
+      toast.error('Failed to update consumer details');
     }
   };
 
   return (
-    <Dialog open={Boolean(consumer)} onClose={onCancel} maxWidth="sm" fullWidth>
+    <Dialog open={Boolean(consumer)} onClose={onCancel}>
       <DialogContent>
-        <Typography variant="h6" gutterBottom sx={{ textAlign: 'center', mb: 2 }}>
-          Edit Consumer Details
-        </Typography>
+        <Typography variant="h6" gutterBottom>Edit Consumer Details</Typography>
         <Grid container spacing={2}>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={6}>
             <TextField
-              margin="dense"
               label="First Name"
               name="firstName"
               value={formData.firstName}
               onChange={handleChange}
               fullWidth
-              variant="outlined"
-              size="small"
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={6}>
             <TextField
-              margin="dense"
               label="Last Name"
               name="lastName"
               value={formData.lastName}
               onChange={handleChange}
               fullWidth
-              variant="outlined"
-              size="small"
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12}>
             <TextField
-              margin="dense"
               label="Email"
               name="email"
               value={formData.email}
               onChange={handleChange}
               fullWidth
-              variant="outlined"
-              size="small"
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12}>
             <TextField
-              margin="dense"
               label="Contact Number"
               name="contact_number"
               value={formData.contact_number}
               onChange={handleChange}
               fullWidth
-              variant="outlined"
-              size="small"
             />
           </Grid>
           <Grid item xs={12}>
             <TextField
-              margin="dense"
               label="Address"
               name="address"
               value={formData.address}
               onChange={handleChange}
               fullWidth
-              variant="outlined"
-              size="small"
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12}>
+            {/* Make Meter No read-only */}
             <TextField
-              margin="dense"
               label="Meter No"
               name="meterNo"
               value={formData.meterNo}
               onChange={handleChange}
               fullWidth
-              variant="outlined"
-              size="small"
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              margin="dense"
-              label="Join Date"
-              name="joinDate"
-              value={formData.joinDate}
-              onChange={handleChange}
-              type="date"
-              fullWidth
-              variant="outlined"
-              size="small"
-              InputLabelProps={{ shrink: true }}
+              InputProps={{
+                readOnly: true,  // Disable the input
+              }}
             />
           </Grid>
           <Grid item xs={12}>
-            <FormControl fullWidth margin="dense" variant="outlined" size="small">
+            <FormControl fullWidth>
               <InputLabel>Phase</InputLabel>
               <Select
                 name="phase"
                 value={formData.phase}
                 onChange={handleChange}
-                label="Phase"
               >
                 <MenuItem value="1-Phase">1-Phase</MenuItem>
                 <MenuItem value="3-Phase">3-Phase</MenuItem>
               </Select>
             </FormControl>
           </Grid>
+          <Grid item xs={12}>
+            {/* Make Branch read-only */}
+            <TextField
+              label="Branch"
+              name="branch"
+              value={formData.branch}
+              onChange={handleChange}
+              fullWidth
+              InputProps={{
+                readOnly: true,  // Disable the input
+              }}
+            />
+          </Grid>
         </Grid>
       </DialogContent>
-      <DialogActions sx={{ justifyContent: 'space-between', padding: '16px' }}>
-        <Button onClick={onCancel} color="secondary" variant="outlined">
-          Cancel
-        </Button>
-        <Button onClick={handleSave} color="primary" variant="contained">
-          Save
-        </Button>
+      <DialogActions>
+        <Button onClick={onCancel} color="secondary">Cancel</Button>
+        <Button onClick={handleSave} color="primary">Save</Button>
       </DialogActions>
     </Dialog>
   );

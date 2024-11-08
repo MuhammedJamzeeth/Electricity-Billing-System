@@ -1,5 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useEffect, useState } from 'react';
+import AddPaymentBtn from "./AddPaymentBtn.jsx";
 
 const PaymentsTbl = () => {
     const [payments, setPayments] = useState([]);
@@ -26,12 +27,13 @@ const PaymentsTbl = () => {
     if (error) return <div>Error: {error}</div>;
 
     return (
+        <div>
+        <AddPaymentBtn />
         <div className="p-4 bg-gray-50 rounded-lg shadow-lg">
-            <h2 className="text-2xl font-semibold mb-4 text-left text-gray-700">Payment Details</h2>
             <div className="overflow-x-auto">
-                <div className="max-h-80 overflow-y-auto rounded-lg">
+                <div className="max-h-60 overflow-y-auto rounded-lg">
                     <table className="w-full text-left border-collapse bg-white">
-                        <thead className="sticky top-0 bg-blue-100 text-gray-700 shadow">
+                        <thead className="sticky top-0 bg-blue-100 text-black shadow">
                         <tr>
                             <th className="p-4 font-medium">Account Number</th>
                             <th className="p-4 font-medium">Receipt Number</th>
@@ -41,8 +43,8 @@ const PaymentsTbl = () => {
                             <th className="p-4 font-medium">Amount Paid</th>
                         </tr>
                         </thead>
-                        <tbody>
-                        {payments.slice(0, 10).map((payment, index) => (
+                        <tbody className="text-gray-700">
+                        {payments.map((payment, index) => (
                             <tr
                                 key={`${payment.paymentId}-${payment.accountNumber}`}
                                 className={`${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`}
@@ -64,6 +66,7 @@ const PaymentsTbl = () => {
                 </div>
             </div>
         </div>
+    </div>
     );
 };
 

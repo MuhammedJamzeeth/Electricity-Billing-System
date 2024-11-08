@@ -2,16 +2,22 @@ import {Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, T
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import useBranchHandler from "../../../hooks/useBranchHandler.js";
-import React, {useEffect} from "react";
+import {useEffect} from "react";
 import {useNavigate} from "react-router-dom";
 
 const BranchTable = () => {
-    const { branch, loading, getAllBranch } = useBranchHandler();
+    const { branch, loading, getAllBranch, deleteBranch, deleteRes } = useBranchHandler();
     const nav = useNavigate();
 
     useEffect(() => {
         getAllBranch().then()
     }, []);
+
+    useEffect(() => {
+        console.log(deleteRes)
+        getAllBranch().then()
+    }, [deleteRes]);
+
 
     if (loading) {
         return <div className="flex justify-center items-center">
@@ -39,18 +45,18 @@ const BranchTable = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {branch.map((item) => (
+                            {Array.isArray(branch) && branch.map((item) => (
                                 <TableRow key={item.branchId} hover>
                                     <TableCell align="center">{item.branchId}</TableCell>
                                     <TableCell align="center">{item.branchName}</TableCell>
                                     <TableCell align="center">{item.branchUsername}</TableCell>
-                                    <TableCell align="center">{item.contactNo}</TableCell>
                                     <TableCell align="center">{item.location}</TableCell>
+                                    <TableCell align="center">{item.contactNo}</TableCell>
                                     <TableCell align="center">
-                                        <Button>
+                                        <Button onClick={() => nav(`/home/edit-branch/${item.branchId}`)}>
                                             <EditIcon />
                                         </Button>
-                                        <Button sx={{ color: 'red' }}>
+                                        <Button onClick={() => deleteBranch(item.branchId)} sx={{ color: 'red' }}>
                                             <DeleteForeverOutlinedIcon sx={{ color: 'inherit' }} />
                                         </Button>
                                     </TableCell>

@@ -54,6 +54,7 @@ const AddPaymentBtn = () => {
         }
     };
 
+
     const handleConfirmSubmit = async () => {
         const { accountNumber, receiptNumber, amount, paymentDate } = formData;
         setShowConfirmation(false);
@@ -72,6 +73,7 @@ const AddPaymentBtn = () => {
 
             if (response.ok) {
                 setNotification('New payment added successfully');
+                //onAddPayment();
                 setFormData({ accountNumber: '', customerName: '', receiptNumber: '', amount: '', paymentDate: '' });
                 setShowForm(false);
             } else {
@@ -88,10 +90,10 @@ const AddPaymentBtn = () => {
     };
 
     return (
-        <div className="relative mt-4">
+        <div className="mt-4 flex justify-end">
             <button
                 onClick={toggleForm}
-                className="absolute top-4 right-4 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 transition duration-200"
+                className=" top-2 mr-4 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 transition duration-200"
             >
                 Add Payment
             </button>

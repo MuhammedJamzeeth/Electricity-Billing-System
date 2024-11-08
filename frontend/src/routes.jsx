@@ -10,6 +10,7 @@ import Branches from "./pages/Home/Branches.jsx";
 import AddBranch from "./pages/Home/AddBranch.jsx";
 import EmployeeTable from "./pages/Employee/employee.jsx";
 import Checkout from "./pages/Checkout/Checkout.jsx";
+import EditBranch from "./pages/Home/EditBranch.jsx";
 
 
 const router = createBrowserRouter([
@@ -44,6 +45,10 @@ const router = createBrowserRouter([
             {
                 path: "checkout",
                 element: <Checkout/>
+            },
+            {
+                path: "edit-branch/:id",
+                element: <EditBranch/>
             }
         ]
     },

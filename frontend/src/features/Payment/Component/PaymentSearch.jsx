@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 import React, { useState } from 'react';
 import axios from 'axios';
 
@@ -28,6 +29,7 @@ const PaymentSearch = () => {
             } else {
                 setPayments(response.data);
             }
+            // eslint-disable-next-line no-unused-vars
         } catch (error) {
             setErrorMessage('Error fetching data, please try again later.');
             setPayments([]);
@@ -42,10 +44,10 @@ const PaymentSearch = () => {
     };
 
     return (
-        <div className="max-w-5xl mt-2 p-4 bg-white rounded-lg shadow-lg flex">
+        <div className="max-w-5xl mt-1 p-4 bg-white rounded-lg shadow-lg flex">
             {/* Left Side - Search Bar */}
             <div className="w-1/4 pr-4">
-                <h2 className="text-xl font-bold mb-4">Search for Payments</h2>
+                <h2 className="text-xl text-black font-bold mb-4">Search for Payments</h2>
                 <form onSubmit={handleSearch} className="flex flex-col">
                     <input
                         type="text"
@@ -77,9 +79,9 @@ const PaymentSearch = () => {
                 {payments.length > 0 && (
                     <div>
                         <h3 className="text-xl text-center text-green-700 bg-amber-200 rounded-3xl font-semibold mb-2">Payments List of: {searchTerm}</h3>
-                        <div className="overflow-x-auto max-h-44 border border-gray-300 rounded-lg"> {/* Set max-height for scroll */}
+                        <div className="overflow-x-auto max-h-40 border border-gray-300 rounded-lg">
                             <table className="min-w-full table-auto border-collapse">
-                                <thead className="sticky top-0 bg-gray-200">
+                                <thead className="sticky top-0 bg-blue-100 text-black">
                                 <tr>
                                     <th className="px-4 py-2 border-b text-left">Payment ID</th>
                                     <th className="px-4 py-2 border-b text-left">Receipt Number</th>
@@ -87,7 +89,7 @@ const PaymentSearch = () => {
                                     <th className="px-4 py-2 border-b text-left">Payment Date</th>
                                 </tr>
                                 </thead>
-                                <tbody>
+                                <tbody className="text-gray-700">
                                 {payments.map((payment) => (
                                     <tr key={payment.paymentId}>
                                         <td className="px-4 py-2 border-b">{payment.paymentId}</td>

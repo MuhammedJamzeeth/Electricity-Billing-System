@@ -1,7 +1,8 @@
-import {Button} from "@mui/material";
-import React, {useState} from "react";
 import {handleInputChange} from "../../hooks/handleInputChange.js";
+import {Button} from "@mui/material";
+import {useEffect, useState} from "react";
 import useBranchHandler from "../../hooks/useBranchHandler.js";
+import {useParams} from "react-router-dom";
 
 const InitialState = {
     branchName: "",
@@ -10,16 +11,19 @@ const InitialState = {
     contactNo: ""
 }
 
-const AddBranch = () => {
-    const [inputValues, setInputValues] = useState(InitialState)
 
-    const {loading, addNewBranch, error} = useBranchHandler(inputValues)
+const EditBranch = () => {
+    const param = useParams()
+    const [ inputValues, setInputValues] = useState(InitialState)
+    const {getBranchById, error, updateBranch} = useBranchHandler(inputValues);
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
-        addNewBranch().then()
+    useEffect(() => {
+        getBranchById(param.id).then((r) => setInputValues(r))
+    }, []);
+
+    const handleSubmit = () => {
         console.log(inputValues)
-        console.log(error)
+        updateBranch(param.id).then()
     }
 
     return (
@@ -31,7 +35,8 @@ const AddBranch = () => {
                 <div className="flex flex-col">
                     <label className="text-[#2B3674] font-dm font-medium ">Branch Name {error.branchName && <span
                         className="text-red-500 text-[11px]"> *{error.branchName}</span>}</label>
-                    <input onChange={(e) => handleInputChange(e, setInputValues)} name="branchName" type="text" placeholder="Enter the branch name"
+                    <input value={inputValues?.branchName} onChange={(e) => handleInputChange(e, setInputValues)} name="branchName" type="text"
+                           placeholder="Enter the branch name"
                            className="pl-2 placeholder:text-[14px] w-full h-[36px] border border-solid border-[#2E65F3] rounded-[8px]"/>
                 </div>
                 <div className="flex flex-col">
@@ -39,7 +44,8 @@ const AddBranch = () => {
                         {error.location && <span
                             className="text-red-500 text-[11px]"> *{error.location}</span>}
                     </label>
-                    <input onChange={(e) => handleInputChange(e, setInputValues)} name="location" type="text" placeholder="Enter the location"
+                    <input value={inputValues?.location} onChange={(e) => handleInputChange(e, setInputValues)} name="location" type="text"
+                           placeholder="Enter the location"
                            className="pl-2 placeholder:text-[14px] w-full h-[36px] border border-solid border-[#2E65F3] rounded-[8px]"/>
                 </div>
                 <div className="flex flex-col">
@@ -47,7 +53,8 @@ const AddBranch = () => {
                         {error.password && <span
                             className="text-red-500 text-[11px]"> *{error.password}</span>}
                     </label>
-                    <input onChange={(e) => handleInputChange(e, setInputValues)} type="password" name="password" placeholder="Enter the password"
+                    <input value={inputValues?.password} onChange={(e) => handleInputChange(e, setInputValues)} type="password" name="password"
+                           placeholder="Enter the password"
                            className="pl-2 w-full h-[36px] placeholder:text-[14px] border border-solid border-[#2E65F3] rounded-[8px]"/>
                 </div>
                 <div className="flex flex-col">
@@ -55,7 +62,8 @@ const AddBranch = () => {
                         {error.contactNo && <span
                             className="text-red-500 text-[11px]"> *{error.contactNo}</span>}
                     </label>
-                    <input  onChange={(e) => handleInputChange(e, setInputValues)} type="number" name="contactNo" placeholder="07X XXX XXXX"
+                    <input value={inputValues?.contactNo} onChange={(e) => handleInputChange(e, setInputValues)} type="text" name="contactNo"
+                           placeholder="07X XXX XXXX"
                            className="pl-2 w-full h-[36px] text-[14px] border border-solid border-[#2E65F3] rounded-[8px]"/>
                 </div>
                 <div className="flex w-full px-1 pb-3 items-end justify-end">
@@ -66,6 +74,6 @@ const AddBranch = () => {
             </div>
         </div>
     );
-};
+}
 
-export default AddBranch;
+export default EditBranch;

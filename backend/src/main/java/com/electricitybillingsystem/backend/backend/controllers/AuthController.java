@@ -2,6 +2,7 @@ package com.electricitybillingsystem.backend.backend.controllers;
 
 
 import com.electricitybillingsystem.backend.backend.dto.AdminLoginRequestDto;
+import com.electricitybillingsystem.backend.backend.dto.LoginResponseDto;
 import com.electricitybillingsystem.backend.backend.services.AdminService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,7 @@ public class AuthController {
     private final AdminService adminService;
 
     @PostMapping("/login")
-    public ResponseEntity<String> admin(@Valid @RequestBody AdminLoginRequestDto loginRequest) {
+    public ResponseEntity<LoginResponseDto> admin(@Valid @RequestBody AdminLoginRequestDto loginRequest) {
         var response = adminService.login(loginRequest.getUsername(), loginRequest.getPassword());
         return ResponseEntity.ok(response);
     }

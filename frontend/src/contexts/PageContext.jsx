@@ -1,7 +1,7 @@
 import {createContext, useState, useContext, useEffect} from 'react';
 import {useLocation} from "react-router-dom";
 
-const PageContext = createContext();
+const PageContext = createContext(undefined);
 
 // eslint-disable-next-line react/prop-types
 export const PageProvider = ({ children }) => {
