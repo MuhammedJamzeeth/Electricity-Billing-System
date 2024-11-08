@@ -1,0 +1,95 @@
+/* Main container to center content */
+.bodch {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 75vh;
+  background-color: #f4f4f9;
+}
+
+/* Card styling */
+.checkout-container {
+  width: 320px;
+  padding: 20px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-align: center;
+}
+
+/* Zoom effect on hover */
+.checkout-container:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Heading styling */
+h1 {
+  font-size: 24px;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+/* Subtitle styling */
+p {
+  font-size: 14px;
+  color: #777;
+  margin-bottom: 20px;
+}
+
+/* Thumbnail styling for the account number input */
+.thumbnail-input {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 2px solid #ccc;
+  transition: border-color 0.3s ease;
+  margin-bottom: 15px;
+}
+
+.thumbnail-input:focus {
+  border-color: #4caf50;
+  outline: none;
+}
+
+/* Success message styling */
+.success-message {
+  font-size: 18px;
+  color: #4caf50;
+  margin-top: 20px;
+}
+
+/* Button styling */
+button {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  color: white;
+  background-color: #4caf50;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+button[type="reset"] {
+  background-color: #f44336;
+}
+
+button[type="reset"]:hover {
+  background-color: #e53935;
+}
+
+/* Additional footer styling */
+.footer-text {
+  font-size: 12px;
+  color: #888;
+  margin-top: 15px;
+}

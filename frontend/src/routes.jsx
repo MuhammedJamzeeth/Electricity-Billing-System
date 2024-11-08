@@ -9,6 +9,7 @@ import Payment from "./pages/Payment/Payment.jsx";
 import Branches from "./pages/Home/Branches.jsx";
 import AddBranch from "./pages/Home/AddBranch.jsx";
 import EmployeeTable from "./pages/Employee/employee.jsx";
+import Checkout from "./pages/Checkout/Checkout.jsx";
 
 
 const router = createBrowserRouter([
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
             {
                 path: "employee",
                 element: <EmployeeTable/>
+            },
+            {
+                path: "checkout",
+                element: <Checkout/>
             }
         ]
     },

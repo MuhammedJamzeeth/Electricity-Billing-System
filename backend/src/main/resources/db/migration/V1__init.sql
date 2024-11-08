@@ -1,4 +1,5 @@
-CREATE USER IF NOT EXISTS 'group07'@'localhost' IDENTIFIED BY '1234';
+CREATE USER IF NOT EXISTS 'group07'@'localhost' IDENTIFIED BY 'Str0ngP@ssw0rd!';
+
 
 GRANT ALL PRIVILEGES ON *.* TO 'group07'@'localhost' WITH GRANT OPTION;
 
@@ -105,18 +106,126 @@ END //
 DELIMITER ;
 -- stored procedure end
 
--- akthar
-CREATE TABLE IF NOT EXISTS EBill (
-   bill_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-   account_no BIGINT NOT NULL,
-   crnt_date DATE,
-   last_date DATE,
-   total_unit INT,
-   crnt_unit INT,
-   month_bill DECIMAL(10, 2),
-   total_bill DECIMAL(10, 2),
-   FOREIGN KEY (account_no) REFERENCES consumer(account_no)
+-- akthar----------------
+
+
+-- Create the EBill table with updated data types
+CREATE TABLE EBill (
+                       bill_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                       account_no BIGINT NOT NULL,
+                       crnt_date DATE,
+                       last_date DATE,
+                       total_unit INT,
+                       crnt_unit INT,
+                       month_bill DECIMAL(10, 2),
+                       total_bill DECIMAL(10, 2),
+                       FOREIGN KEY (account_no) REFERENCES Consumer(account_no)
 );
+
+-- Create an index on account_no for faster lookups
+CREATE INDEX idx_account_no ON EBill (account_no);
+
+-- Create the MonthwiseDetails table with updated data types
+CREATE TABLE MonthwiseDetails (
+                                  m_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                  account_no BIGINT NOT NULL,
+                                  crnt_date DATE,
+                                  crnt_unit INT,
+                                  month_bill DECIMAL(10, 2),
+                                  bill_status VARCHAR(50)
+);
+
+-- Create a stored function for checking account validity
+DELIMITER //
+
+CREATE FUNCTION ebillCheck(accountNo BIGINT)
+    RETURNS VARCHAR(255)
+    DETERMINISTIC
+BEGIN
+    DECLARE result VARCHAR(255);
+
+    IF EXISTS (SELECT 1 FROM Consumer WHERE account_no = accountNo) THEN
+        SET result = 'Account approved';
+ELSE
+        SET result = 'Invalid Account No';
+END IF;
+
+RETURN result;
+END //
+
+DELIMITER ;
+
+-- Create a stored function to calculate the month bill based on phase
+DELIMITER //
+
+CREATE FUNCTION calculateMonthBill(accountNo BIGINT, crntUnit INT)
+    RETURNS DOUBLE
+    DETERMINISTIC
+BEGIN
+    DECLARE previousTotalUnit INT DEFAULT 0;
+    DECLARE phase INT;
+    DECLARE monthBill DOUBLE DEFAULT 0.0;
+    DECLARE calckedUnit INT;
+
+    -- Get the previous total unit
+SELECT IFNULL(SUM(total_unit), 0) INTO previousTotalUnit
+FROM EBill
+WHERE account_no = accountNo;
+
+-- Get the phase from the Consumer table
+SELECT CAST(phase AS UNSIGNED) INTO phase
+FROM Consumer
+WHERE account_no = accountNo;
+
+-- Calculate the billed units
+SET calckedUnit = crntUnit - previousTotalUnit;
+
+    -- Phase-based billing logic
+    IF phase = 1 THEN
+        IF calckedUnit < 58 THEN
+            SET monthBill = (calckedUnit * 15.00) + 400;
+ELSE
+            SET monthBill = (58 * 15.00) + ((calckedUnit - 58) * 12.00) + 400;
+END IF;
+    ELSEIF phase = 3 THEN
+        IF calckedUnit < 58 THEN
+            SET monthBill = (calckedUnit * 12.00) + 400;
+ELSE
+            SET monthBill = (58 * 12.00) + ((calckedUnit - 58) * 10.00) + 400;
+END IF;
+END IF;
+
+RETURN monthBill;
+END //
+
+DELIMITER ;
+
+-- Trigger to update bill status after inserting into MonthwiseDetails
+DELIMITER //
+DELIMITER //
+
+CREATE TRIGGER update_bill_status
+    BEFORE INSERT ON MonthwiseDetails
+    FOR EACH ROW
+BEGIN
+    DECLARE total_last_three_months DECIMAL(10, 2);
+
+    -- Calculate the sum of `monthBill` for the last three months for this account
+    SELECT IFNULL(SUM(month_bill), 0) INTO total_last_three_months
+    FROM MonthwiseDetails
+    WHERE account_no = NEW.account_no
+    ORDER BY crnt_date DESC
+        LIMIT 3;
+
+    -- Check against the `totalBill` in the `EBill` table and set the bill status accordingly
+    IF total_last_three_months > (SELECT total_bill FROM EBill WHERE account_no = NEW.account_no) THEN
+        SET NEW.bill_status = 'Redbill';
+    ELSE
+        SET NEW.bill_status = 'normal';
+END IF;
+END //
+
+DELIMITER ;
 
 -- Praveen --------------------------------------------
 

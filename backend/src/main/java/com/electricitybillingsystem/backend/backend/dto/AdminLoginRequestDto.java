@@ -16,4 +16,5 @@ public class AdminLoginRequestDto {
 
     @NotBlank(message = "branch must not be empty")
     private String branch;
+
 }
