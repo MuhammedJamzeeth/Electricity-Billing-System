@@ -1,6 +1,7 @@
 package com.electricitybillingsystem.backend.backend.services;
 
 import com.electricitybillingsystem.backend.backend.dto.BranchAddRequestDto;
+import com.electricitybillingsystem.backend.backend.dto.BranchResponseDto;
 import com.electricitybillingsystem.backend.backend.dto.BranchUpdateDto;
 import com.electricitybillingsystem.backend.backend.exceptions.AlreadyExistsException;
 import com.electricitybillingsystem.backend.backend.exceptions.NotFoundException;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -21,9 +23,18 @@ public class BranchServiceImpl implements BranchService {
     private final BranchRepository branchRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @Override
-    public List<Branch> getAllBranches() {
-        return branchRepository.findAll();
+    public List<BranchResponseDto> getAllBranches() {
+        List<Branch> branches = branchRepository.findAll();
+        return branches.stream().map(this::convertToDto).collect(Collectors.toList());
+    }
+
+    private BranchResponseDto convertToDto(Branch branch) {
+        BranchResponseDto dto = new BranchResponseDto();
+        dto.setBranchName(branch.getBranchName());
+        dto.setLocation(branch.getLocation());
+        dto.setBranchUsername(branch.getBranchUsername());
+        dto.setContactNo(branch.getContactNo());
+        return dto;
     }
 
     @Override

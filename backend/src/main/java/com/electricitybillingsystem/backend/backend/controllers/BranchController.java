@@ -2,6 +2,7 @@ package com.electricitybillingsystem.backend.backend.controllers;
 
 
 import com.electricitybillingsystem.backend.backend.dto.BranchAddRequestDto;
+import com.electricitybillingsystem.backend.backend.dto.BranchResponseDto;
 import com.electricitybillingsystem.backend.backend.dto.BranchUpdateDto;
 import com.electricitybillingsystem.backend.backend.models.Branch;
 import com.electricitybillingsystem.backend.backend.services.BranchService;
@@ -20,7 +21,7 @@ public class BranchController {
     private final BranchService branchService;
 
     @GetMapping
-    public List<Branch> getAllBranches() {
+    public List<BranchResponseDto> getAllBranches() {
         return branchService.getAllBranches();
     }
 

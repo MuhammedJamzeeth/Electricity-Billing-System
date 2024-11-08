@@ -20,6 +20,7 @@ const SignIn = () => {
 
     useEffect(() => {
         getAllBranch().then()
+        console.log(branch)
     }, []);
 
     const handleSubmit = (e) => {
@@ -65,8 +66,8 @@ const SignIn = () => {
                             >
                                 <MenuItem value={"admin"}>Admin</MenuItem>
 
-                                {branch?.map((item) => (
-                                    <MenuItem value={item.location}>{item.location}</MenuItem>
+                                {Array.isArray(branch) && branch.map((item) => (
+                                    <MenuItem value={item.location} key={item.location}>{item.location}</MenuItem>
                                 ))}
 
                             </Select>

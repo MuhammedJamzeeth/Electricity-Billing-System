@@ -1,6 +1,7 @@
 package com.electricitybillingsystem.backend.backend.models;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import com.electricitybillingsystem.backend.backend.models.Consumer;
@@ -16,6 +17,7 @@ public class EBill {
     private Long billId; // Changed to Long for auto-increment
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name="account_no", nullable = false)
     private Consumer consumer;
 
